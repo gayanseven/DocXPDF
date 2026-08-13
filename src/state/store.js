@@ -9,6 +9,7 @@ import { createUiSlice } from './slices/uiSlice.js';
 import { createHistorySlice } from './slices/historySlice.js';
 import { createPageOpsSlice } from './slices/pageOpsSlice.js';
 import { createSignatureLibrarySlice } from './slices/signatureLibrarySlice.js';
+import { createAnnotationSlice } from './slices/annotationSlice.js';
 
 export const useStore = create((set, get) => ({
   ...createDocumentSlice(set, get),
@@ -19,6 +20,7 @@ export const useStore = create((set, get) => ({
   ...createHistorySlice(set, get),
   ...createPageOpsSlice(set, get),
   ...createSignatureLibrarySlice(set, get),
+  ...createAnnotationSlice(set, get),
 
   reset: () =>
     set({
@@ -28,6 +30,8 @@ export const useStore = create((set, get) => ({
       pages: [],
       fieldValues: {},
       overlays: [],
+      annotations: [],
+      selectedAnnotationId: null,
       activeTool: 'select',
       pendingSignature: null,
       selectedOverlayId: null,
@@ -38,8 +42,8 @@ export const useStore = create((set, get) => ({
 
   // Rehydrate a document from a saved autosave record. Unlike setDoc (which
   // always starts a document fresh), this restores the prior overlays/field
-  // values/page layout too — the pdfjs `doc` proxy itself can't be
-  // persisted, so it's re-derived from the saved raw bytes.
+  // values/page layout/annotations too — the pdfjs `doc` proxy itself can't
+  // be persisted, so it's re-derived from the saved raw bytes.
   restoreFromSession: async (session) => {
     const pdf = await loadPdf(session.arrayBuffer);
     const pages = await getPageSizes(pdf);
@@ -49,6 +53,7 @@ export const useStore = create((set, get) => ({
       doc: pdf,
       pages,
       overlays: session.overlays ?? [],
+      annotations: session.annotations ?? [],
       fieldValues: session.fieldValues ?? {},
       pageLayout: session.pageLayout ?? defaultPageLayout(pages),
       recoverableSession: null,

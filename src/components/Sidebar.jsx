@@ -1,9 +1,10 @@
-import { Layers, MousePointer2, Type, PenTool } from 'lucide-react';
+import { Layers, MousePointer2, Type, Pencil, PenTool } from 'lucide-react';
 import { useStore } from '../state/store.js';
 
 const TOOLS = [
   { id: 'select', tooltip: 'Select', Icon: MousePointer2 },
   { id: 'text', tooltip: 'Add Text', Icon: Type },
+  { id: 'annotate', tooltip: 'Annotate', Icon: Pencil },
   { id: 'signature', tooltip: 'Add Signature', Icon: PenTool },
 ];
 

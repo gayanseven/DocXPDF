@@ -150,6 +150,50 @@
   cursor: pointer;
 }
 
+/* ── Annotation layer (freehand pen/highlighter/shapes) ─────────────────── */
+.annotation-layer { position: absolute; inset: 0; z-index: 2; }
+.annotation-layer--active { cursor: crosshair; }
+
+/* ── Floating annotate sub-toolbar ──────────────────────────────────────── */
+.annotate-toolbar {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--text-primary);
+  border-radius: var(--radius);
+  padding: 5px;
+  box-shadow: var(--shadow-lg);
+  margin: var(--space-4) auto 0;
+}
+.annotate-toolbar-group { display: flex; align-items: center; gap: 2px; }
+.annotate-toolbar-sep { width: 1px; height: 18px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; flex-shrink: 0; }
+.annotate-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+.annotate-toolbar-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.annotate-toolbar-btn--active { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.annotate-toolbar-width-dot { display: block; border-radius: 50%; background: currentColor; }
+.annotate-toolbar-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 0;
+}
+.annotate-toolbar-swatch--active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25); }
+
 /* ── Signature modal content ────────────────────────────────────────────── */
 .sig-hint { margin: 0; font-size: var(--text-base); color: var(--text-secondary); }
 .sig-canvas-wrap {

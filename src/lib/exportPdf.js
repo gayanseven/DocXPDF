@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, degrees, LineCapStyle } from 'pdf-lib';
 
 function fillForm(pdfDoc, fieldValues) {
   try {
@@ -100,6 +100,47 @@ async function drawOverlay(pdfDoc, page, overlay, fonts) {
   }
 }
 
+// Pen/highlighter strokes export as a sequence of drawLine segments rather
+// than a single drawSvgPath — pdf-lib's SvgPath fidelity for multi-segment
+// freehand paths isn't guaranteed, while per-segment lines are a simple,
+// unambiguous primitive that's certain to render correctly.
+function drawAnnotation(page, a) {
+  const color = hexToRgb(a.color) ?? rgb(0, 0, 0);
+  const opacity = a.opacity ?? 1;
+
+  if (a.type === 'pen' || a.type === 'highlighter') {
+    for (let i = 0; i < a.points.length - 1; i++) {
+      const p1 = a.points[i], p2 = a.points[i + 1];
+      page.drawLine({
+        start: { x: p1.x, y: p1.y }, end: { x: p2.x, y: p2.y },
+        thickness: a.strokeWidth, color, opacity, lineCap: LineCapStyle.Round,
+      });
+    }
+    return;
+  }
+
+  if (a.type === 'rect') {
+    page.drawRectangle({ x: a.x, y: a.y, width: a.w, height: a.h, borderColor: color, borderWidth: a.strokeWidth, borderOpacity: opacity });
+    return;
+  }
+
+  if (a.type === 'ellipse') {
+    page.drawEllipse({ x: a.x + a.w / 2, y: a.y + a.h / 2, xScale: Math.abs(a.w) / 2, yScale: Math.abs(a.h) / 2, borderColor: color, borderWidth: a.strokeWidth, borderOpacity: opacity });
+    return;
+  }
+
+  if (a.type === 'arrow') {
+    const x1 = a.x, y1 = a.y, x2 = a.x + a.w, y2 = a.y + a.h;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const ah = 10;
+    const p1 = { x: x2 - ah * Math.cos(angle - Math.PI / 6), y: y2 - ah * Math.sin(angle - Math.PI / 6) };
+    const p2 = { x: x2 - ah * Math.cos(angle + Math.PI / 6), y: y2 - ah * Math.sin(angle + Math.PI / 6) };
+    page.drawLine({ start: { x: x1, y: y1 }, end: { x: x2, y: y2 }, thickness: a.strokeWidth, color, opacity, lineCap: LineCapStyle.Round });
+    page.drawLine({ start: { x: x2, y: y2 }, end: p1, thickness: a.strokeWidth, color, opacity, lineCap: LineCapStyle.Round });
+    page.drawLine({ start: { x: x2, y: y2 }, end: p2, thickness: a.strokeWidth, color, opacity, lineCap: LineCapStyle.Round });
+  }
+}
+
 function isIdentityLayout(pageLayout, pageCount) {
   if (!pageLayout || pageLayout.length !== pageCount) return false;
   return pageLayout.every((item, i) => !item.isBlank && item.rotation === 0 && item.sourcePage === i + 1);
@@ -116,7 +157,7 @@ function isIdentityLayout(pageLayout, pageCount) {
  * page-level restructuring, consistent with how most PDF tools behave once
  * you start recomposing pages.
  */
-export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout) {
+export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout, annotations = []) {
   const srcDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
   const pageCount = srcDoc.getPageCount();
 
@@ -127,6 +168,10 @@ export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout) 
     for (const overlay of overlays) {
       const page = pages[overlay.page - 1];
       if (page) await drawOverlay(srcDoc, page, overlay, fonts);
+    }
+    for (const annotation of annotations) {
+      const page = pages[annotation.page - 1];
+      if (page) drawAnnotation(page, annotation);
     }
     return srcDoc.save();
   }
@@ -153,14 +198,17 @@ export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout) 
     outDoc.addPage(page);
 
     // Only the first occurrence of a duplicated page carries its
-    // overlays/filled fields, matching the live-preview behavior in
-    // PdfViewer.jsx — otherwise duplicates would double up edits.
+    // overlays/annotations/filled fields, matching the live-preview
+    // behavior in PdfViewer.jsx — otherwise duplicates would double up edits.
     const isPrimary = !seenSource.has(item.sourcePage);
     seenSource.add(item.sourcePage);
     if (!isPrimary) continue;
 
     for (const overlay of overlays.filter((o) => o.page === item.sourcePage)) {
       await drawOverlay(outDoc, page, overlay, fonts);
+    }
+    for (const annotation of annotations.filter((a) => a.page === item.sourcePage)) {
+      drawAnnotation(page, annotation);
     }
   }
 

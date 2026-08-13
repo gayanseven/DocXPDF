@@ -25,7 +25,7 @@ export default function Toolbar() {
     const s = useStore.getState();
     setExporting(true);
     try {
-      const bytes = await exportPdf(s.arrayBuffer, s.fieldValues, s.overlays, s.pageLayout);
+      const bytes = await exportPdf(s.arrayBuffer, s.fieldValues, s.overlays, s.pageLayout, s.annotations);
       const blob = new Blob([bytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');

@@ -15,6 +15,7 @@ export function useAutosave() {
       if (
         state.arrayBuffer === prev.arrayBuffer &&
         state.overlays === prev.overlays &&
+        state.annotations === prev.annotations &&
         state.fieldValues === prev.fieldValues &&
         state.pageLayout === prev.pageLayout
       ) return;
@@ -27,6 +28,7 @@ export function useAutosave() {
           fileName: s.fileName,
           arrayBuffer: s.arrayBuffer,
           overlays: s.overlays,
+          annotations: s.annotations,
           fieldValues: s.fieldValues,
           pageLayout: s.pageLayout,
         });

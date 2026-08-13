@@ -11,6 +11,7 @@ export const createDocumentSlice = (set) => ({
     set({
       fileName, arrayBuffer, doc, pages,
       fieldValues: {}, overlays: [], selectedOverlayId: null,
+      annotations: [], selectedAnnotationId: null,
       pastHistory: [], futureHistory: [],
       pageLayout: defaultPageLayout(pages),
     }),

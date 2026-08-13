@@ -19,6 +19,7 @@ export function useKeyboardShortcuts() {
       if (isEditable || e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === 'v' || e.key === 'V') s.setActiveTool('select');
       if (e.key === 't' || e.key === 'T') s.setActiveTool('text');
+      if (e.key === 'a' || e.key === 'A') s.setActiveTool('annotate');
       if (e.key === 's' || e.key === 'S') s.setActiveTool('signature');
     }
     window.addEventListener('keydown', onKey);

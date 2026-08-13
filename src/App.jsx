@@ -6,6 +6,7 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts.js';
 import Toolbar from './components/Toolbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import PageManagerPanel from './components/PageManagerPanel.jsx';
+import AnnotateToolbar from './components/AnnotateToolbar.jsx';
 import PdfViewer from './components/PdfViewer.jsx';
 import EmptyState from './components/EmptyState.jsx';
 import SignatureModal from './components/SignatureModal.jsx';
@@ -16,6 +17,7 @@ export default function App() {
   const doc = useStore((s) => s.doc);
   const theme = useStore((s) => s.theme);
   const thumbnailPanelOpen = useStore((s) => s.thumbnailPanelOpen);
+  const activeTool = useStore((s) => s.activeTool);
   const pendingSignature = useStore((s) => s.pendingSignature);
   const addOverlay = useStore((s) => s.addOverlay);
   const setPendingSignature = useStore((s) => s.setPendingSignature);
@@ -50,6 +52,7 @@ export default function App() {
         <Sidebar />
         {doc && thumbnailPanelOpen && <PageManagerPanel />}
         <main className="stage">
+          {doc && activeTool === 'annotate' && <AnnotateToolbar />}
           {doc ? <PdfViewer /> : <EmptyState />}
         </main>
       </div>

@@ -27,6 +27,7 @@ button, input, textarea, select { font-family: inherit; color: inherit; }
 }
 
 .stage {
+  position: relative;
   flex: 1 1 auto;
   overflow: auto;
   background: var(--surface-sunken);

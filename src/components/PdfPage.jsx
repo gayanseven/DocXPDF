@@ -3,6 +3,7 @@ import { useStore } from '../state/store.js';
 import { renderPage } from '../lib/pdfRender.js';
 import FormFieldLayer from './FormFieldLayer.jsx';
 import OverlayLayer from './OverlayLayer.jsx';
+import AnnotationLayer from './AnnotationLayer.jsx';
 
 export default function PdfPage({ item, displayNumber, showAnnotations }) {
   const canvasRef = useRef(null);
@@ -34,6 +35,7 @@ export default function PdfPage({ item, displayNumber, showAnnotations }) {
             <canvas ref={canvasRef} className="canvas-layer" />
             {showAnnotations && <FormFieldLayer pageNumber={item.sourcePage} rotation={item.rotation} />}
             {showAnnotations && <OverlayLayer pageNumber={item.sourcePage} rotation={item.rotation} />}
+            {showAnnotations && <AnnotationLayer pageNumber={item.sourcePage} rotation={item.rotation} />}
           </>
         )}
       </div>
