@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Stamp, Hash, Combine, Scissors } from 'lucide-react';
+import { MoreHorizontal, Stamp, Hash, Combine, Scissors, Shrink } from 'lucide-react';
 import { useStore } from '../state/store.js';
 
 export default function ToolsMenu() {
@@ -37,6 +37,9 @@ export default function ToolsMenu() {
           </button>
           <button className="tools-menu-item" onClick={() => openModal('split')}>
             <Scissors size={15} strokeWidth={1.75} /> Split / Extract
+          </button>
+          <button className="tools-menu-item" onClick={() => openModal('compress')}>
+            <Shrink size={15} strokeWidth={1.75} /> Compress
           </button>
         </div>
       )}
