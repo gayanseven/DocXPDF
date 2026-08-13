@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2 } from 'lucide-react';
+import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2, Eraser } from 'lucide-react';
 import { useStore } from '../state/store.js';
 import { exportPdf } from '../lib/exportPdf.js';
 import { loadPdfFile } from '../lib/loadFile.js';
@@ -9,10 +9,11 @@ export default function Toolbar() {
   const inputRef = useRef(null);
   const [exporting, setExporting] = useState(false);
   const {
-    fileName, doc, zoom, loading, theme,
+    fileName, doc, zoom, loading, theme, fieldValues,
     pastHistory, futureHistory, undo, redo,
-    setZoom, reset, toggleTheme, addToast,
+    setZoom, reset, toggleTheme, addToast, clearAllFields,
   } = useStore();
+  const hasFilledFields = Object.keys(fieldValues).length > 0;
 
   async function onFile(e) {
     const file = e.target.files?.[0];
@@ -77,6 +78,17 @@ export default function Toolbar() {
       )}
 
       <div className="header-spacer" />
+
+      {doc && hasFilledFields && (
+        <button
+          className="header-btn-icon"
+          onClick={() => { clearAllFields(); addToast({ type: 'info', message: 'Form fields cleared' }); }}
+          aria-label="Clear all form fields"
+          title="Clear all form fields"
+        >
+          <Eraser size={16} strokeWidth={1.75} />
+        </button>
+      )}
 
       {doc && (
         <>

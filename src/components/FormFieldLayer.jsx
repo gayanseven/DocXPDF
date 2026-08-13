@@ -56,13 +56,17 @@ export default function FormFieldLayer({ pageNumber, rotation = 0 }) {
           width: s.w,
           height: s.h,
         };
+        // PDF spec field-flags bit 2 (value 2) marks a field required.
+        const isRequired = (ann.fieldFlags & 0x2) !== 0;
+        const showRequired = isRequired && !value;
+        const inputClassName = `form-field-input${showRequired ? ' form-field-input--required' : ''}`;
 
         if (ann.fieldType === 'Tx') {
           const isMultiline = (ann.fieldFlags & 0x1000) !== 0;
           return isMultiline ? (
             <textarea
               key={key}
-              className="form-field-input"
+              className={inputClassName}
               style={{ ...style, resize: 'none' }}
               value={value}
               onChange={(e) => setFieldValue(ann.fieldName, e.target.value)}
@@ -70,7 +74,7 @@ export default function FormFieldLayer({ pageNumber, rotation = 0 }) {
           ) : (
             <input
               key={key}
-              className="form-field-input"
+              className={inputClassName}
               style={style}
               value={value}
               onChange={(e) => setFieldValue(ann.fieldName, e.target.value)}

@@ -1,10 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
-import { X, UploadCloud } from 'lucide-react';
+import { X, UploadCloud, Trash2 } from 'lucide-react';
+import { useStore } from '../state/store.js';
 
-const TABS = ['Draw', 'Type', 'Upload'];
+const TABS = ['Draw', 'Type', 'Upload', 'Saved'];
 
 export default function SignatureModal({ onPlace, onCancel }) {
-  const [activeTab, setActiveTab] = useState('Draw');
+  const savedSignatures = useStore((s) => s.savedSignatures);
+  const [activeTab, setActiveTab] = useState(savedSignatures.length > 0 ? 'Saved' : 'Draw');
 
   return (
     <div className="modal-backdrop" onClick={onCancel}>
@@ -32,9 +34,20 @@ export default function SignatureModal({ onPlace, onCancel }) {
           {activeTab === 'Draw' && <DrawTab onPlace={onPlace} onCancel={onCancel} />}
           {activeTab === 'Type' && <TypeTab onPlace={onPlace} onCancel={onCancel} />}
           {activeTab === 'Upload' && <UploadTab onPlace={onPlace} onCancel={onCancel} />}
+          {activeTab === 'Saved' && <SavedTab onPlace={onPlace} onCancel={onCancel} />}
         </div>
       </div>
     </div>
+  );
+}
+
+/* ── Save-for-reuse checkbox, shared by Draw/Type/Upload ────────────────── */
+function SaveToggle({ checked, onChange }) {
+  return (
+    <label className="sig-save-toggle">
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      Save for reuse
+    </label>
   );
 }
 
@@ -43,6 +56,8 @@ function DrawTab({ onPlace, onCancel }) {
   const canvasRef = useRef(null);
   const drawing = useRef(false);
   const [hasStroke, setHasStroke] = useState(false);
+  const [save, setSave] = useState(false);
+  const saveSignature = useStore((s) => s.saveSignature);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,7 +104,9 @@ function DrawTab({ onPlace, onCancel }) {
   }
 
   function place() {
-    onPlace(canvasRef.current.toDataURL('image/png'));
+    const dataUrl = canvasRef.current.toDataURL('image/png');
+    if (save) saveSignature(dataUrl);
+    onPlace(dataUrl);
   }
 
   return (
@@ -110,7 +127,8 @@ function DrawTab({ onPlace, onCancel }) {
       </div>
       <div className="modal-actions">
         <button className="btn-ghost" onClick={clear}>Clear</button>
-        <div className="modal-actions-right">
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+          <SaveToggle checked={save} onChange={setSave} />
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
           <button className="btn-primary" onClick={place} disabled={!hasStroke}>Place</button>
         </div>
@@ -122,6 +140,8 @@ function DrawTab({ onPlace, onCancel }) {
 /* ── Type tab ─────────────────────────────────────────────────────────────── */
 function TypeTab({ onPlace, onCancel }) {
   const [text, setText] = useState('');
+  const [save, setSave] = useState(false);
+  const saveSignature = useStore((s) => s.saveSignature);
 
   function place() {
     if (!text.trim()) return;
@@ -135,7 +155,9 @@ function TypeTab({ onPlace, onCancel }) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text.trim(), canvas.width / 2, canvas.height / 2);
-    onPlace(canvas.toDataURL('image/png'));
+    const dataUrl = canvas.toDataURL('image/png');
+    if (save) saveSignature(dataUrl);
+    onPlace(dataUrl);
   }
 
   return (
@@ -158,7 +180,8 @@ function TypeTab({ onPlace, onCancel }) {
       )}
       <div className="modal-actions">
         <div />
-        <div className="modal-actions-right">
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+          <SaveToggle checked={save} onChange={setSave} />
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
           <button className="btn-primary" onClick={place} disabled={!text.trim()}>Place</button>
         </div>
@@ -197,7 +220,9 @@ function removeWhiteBackground(src) {
 /* ── Upload tab ───────────────────────────────────────────────────────────── */
 function UploadTab({ onPlace, onCancel }) {
   const [dataUrl, setDataUrl] = useState(null);
+  const [save, setSave] = useState(false);
   const inputRef = useRef(null);
+  const saveSignature = useStore((s) => s.saveSignature);
 
   async function onFile(e) {
     const file = e.target.files?.[0];
@@ -208,6 +233,11 @@ function UploadTab({ onPlace, onCancel }) {
       setDataUrl(cleaned);
     };
     reader.readAsDataURL(file);
+  }
+
+  function place() {
+    if (save) saveSignature(dataUrl);
+    onPlace(dataUrl);
   }
 
   return (
@@ -230,9 +260,56 @@ function UploadTab({ onPlace, onCancel }) {
       )}
       <div className="modal-actions">
         <div />
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+          <SaveToggle checked={save} onChange={setSave} />
+          <button className="btn-ghost" onClick={onCancel}>Cancel</button>
+          <button className="btn-primary" onClick={place} disabled={!dataUrl}>Place</button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Saved tab ────────────────────────────────────────────────────────────── */
+function SavedTab({ onPlace, onCancel }) {
+  const savedSignatures = useStore((s) => s.savedSignatures);
+  const deleteSignature = useStore((s) => s.deleteSignature);
+
+  if (savedSignatures.length === 0) {
+    return (
+      <>
+        <p className="sig-hint">No saved signatures yet — draw, type, or upload one and check "Save for reuse."</p>
+        <div className="modal-actions">
+          <div />
+          <div className="modal-actions-right">
+            <button className="btn-ghost" onClick={onCancel}>Cancel</button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p className="sig-hint">Click a saved signature to place it</p>
+      <div className="sig-saved-grid">
+        {savedSignatures.map((sig) => (
+          <div key={sig.id} className="sig-saved-item" onClick={() => onPlace(sig.dataUrl)}>
+            <img src={sig.dataUrl} alt="Saved signature" />
+            <button
+              className="sig-saved-remove"
+              onClick={(e) => { e.stopPropagation(); deleteSignature(sig.id); }}
+              title="Delete"
+            >
+              <Trash2 size={10} strokeWidth={2} />
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="modal-actions">
+        <div />
         <div className="modal-actions-right">
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
-          <button className="btn-primary" onClick={() => onPlace(dataUrl)} disabled={!dataUrl}>Place</button>
         </div>
       </div>
     </>

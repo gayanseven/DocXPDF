@@ -4,6 +4,13 @@ import { useStore } from '../state/store.js';
 import { pdfToScreen, screenToPdf, unrotatePoint } from '../lib/coords.js';
 
 const FONT_SIZES = { xs: 10, sm: 12, md: 14, lg: 16, xl: 22 };
+const DEFAULT_COLOR = '#18181b';
+const COLORS = ['#18181b', '#dc2626', '#d97706', '#16a34a', '#2563eb', '#7c3aed', '#db2777'];
+const FONT_FAMILIES = [
+  { id: 'helvetica', label: 'Sans',  family: 'Helvetica, Arial, sans-serif' },
+  { id: 'times',     label: 'Serif', family: '"Times New Roman", Times, serif' },
+  { id: 'courier',   label: 'Mono',  family: '"Courier New", Courier, monospace' },
+];
 
 const ALIGNMENTS = [
   { id: 'left',   icon: <AlignLeft size={14} strokeWidth={1.75} /> },
@@ -15,6 +22,7 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
   const layerRef = useRef(null);
   const justAddedId = useRef(null);
   const textEditBefore = useRef(null);
+  const colorEditBefore = useRef(null);
   const zoom = useStore((s) => s.zoom);
   const pages = useStore((s) => s.pages);
   const overlays = useStore((s) => s.overlays);
@@ -105,7 +113,7 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
       const p = screenToPdf({ x: sx, y: sy, w: 160, h: 32 }, pageInfo.height, zoom);
       const id = crypto.randomUUID();
       justAddedId.current = id;
-      addOverlay({ id, page: pageNumber, type: 'text', x: p.x, y: p.y, w: p.w, h: p.h, text: '', fontSize: 12, textAlign: 'left', bold: false, italic: false });
+      addOverlay({ id, page: pageNumber, type: 'text', x: p.x, y: p.y, w: p.w, h: p.h, text: '', fontSize: 12, textAlign: 'left', bold: false, italic: false, color: DEFAULT_COLOR, fontFamily: 'helvetica' });
       setSelectedOverlay(id);
       setActiveTool('select');
       addToast({ type: 'success', message: 'Text box added' });
@@ -247,12 +255,57 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                         </button>
                       ))}
                     </div>
+                    <div className="text-format-sep" />
+                    <div className="text-format-group">
+                      {FONT_FAMILIES.map(({ id, label }) => (
+                        <button
+                          key={id}
+                          className={`text-format-btn${(overlay.fontFamily ?? 'helvetica') === id ? ' text-format-btn--active' : ''}`}
+                          onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { fontFamily: id }); }}
+                          title={label}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="text-format-sep" />
+                    <div className="text-format-group">
+                      {COLORS.map((color) => (
+                        <button
+                          key={color}
+                          className={`text-format-swatch${(overlay.color ?? DEFAULT_COLOR) === color ? ' text-format-swatch--active' : ''}`}
+                          style={{ background: color }}
+                          onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { color }); }}
+                          title={color}
+                        />
+                      ))}
+                      <input
+                        type="color"
+                        className="text-format-color-input"
+                        value={overlay.color ?? DEFAULT_COLOR}
+                        onClick={(e) => e.stopPropagation()}
+                        onFocus={() => { colorEditBefore.current = useStore.getState().overlays; }}
+                        onChange={(e) => updateOverlay(overlay.id, { color: e.target.value })}
+                        onBlur={() => {
+                          if (colorEditBefore.current) commitOverlayHistory(colorEditBefore.current);
+                          colorEditBefore.current = null;
+                        }}
+                        title="Custom color"
+                      />
+                    </div>
                   </div>
                 )}
                 <input
                   className="overlay-text-input"
                   value={overlay.text}
-                  style={{ fontSize: Math.round(overlay.fontSize * zoom), textAlign: overlay.textAlign ?? 'left', fontWeight: overlay.bold ? '700' : '400', fontStyle: overlay.italic ? 'italic' : 'normal' }}
+                  style={{
+                    fontSize: Math.round(overlay.fontSize * zoom),
+                    textAlign: overlay.textAlign ?? 'left',
+                    fontWeight: overlay.bold ? '700' : '400',
+                    fontStyle: overlay.italic ? 'italic' : 'normal',
+                    fontFamily: FONT_FAMILIES.find((f) => f.id === overlay.fontFamily)?.family ?? FONT_FAMILIES[0].family,
+                    color: overlay.color ?? DEFAULT_COLOR,
+                  }}
                   onChange={(e) => updateOverlay(overlay.id, { text: e.target.value })}
                   onMouseDown={(e) => e.stopPropagation()}
                   onFocus={() => {

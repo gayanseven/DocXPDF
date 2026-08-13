@@ -8,6 +8,7 @@ import { createFormSlice } from './slices/formSlice.js';
 import { createUiSlice } from './slices/uiSlice.js';
 import { createHistorySlice } from './slices/historySlice.js';
 import { createPageOpsSlice } from './slices/pageOpsSlice.js';
+import { createSignatureLibrarySlice } from './slices/signatureLibrarySlice.js';
 
 export const useStore = create((set, get) => ({
   ...createDocumentSlice(set, get),
@@ -17,6 +18,7 @@ export const useStore = create((set, get) => ({
   ...createUiSlice(set, get),
   ...createHistorySlice(set, get),
   ...createPageOpsSlice(set, get),
+  ...createSignatureLibrarySlice(set, get),
 
   reset: () =>
     set({

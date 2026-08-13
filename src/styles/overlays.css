@@ -20,7 +20,7 @@
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-subtle);
 }
-.form-field-input--required { border-color: var(--warning); }
+.form-field-input--required { border-color: var(--warning); background: var(--warning-subtle); }
 .form-field-check {
   pointer-events: all;
   position: absolute;

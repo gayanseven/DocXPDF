@@ -23,20 +23,38 @@ function fillForm(pdfDoc, fieldValues) {
   }
 }
 
+const FONT_FAMILIES = {
+  helvetica: [StandardFonts.Helvetica, StandardFonts.HelveticaBold, StandardFonts.HelveticaOblique, StandardFonts.HelveticaBoldOblique],
+  times:     [StandardFonts.TimesRoman, StandardFonts.TimesRomanBold, StandardFonts.TimesRomanItalic, StandardFonts.TimesRomanBoldItalic],
+  courier:   [StandardFonts.Courier, StandardFonts.CourierBold, StandardFonts.CourierOblique, StandardFonts.CourierBoldOblique],
+};
+
 async function embedFonts(pdfDoc) {
-  return {
-    normal:     await pdfDoc.embedFont(StandardFonts.Helvetica),
-    bold:       await pdfDoc.embedFont(StandardFonts.HelveticaBold),
-    italic:     await pdfDoc.embedFont(StandardFonts.HelveticaOblique),
-    boldItalic: await pdfDoc.embedFont(StandardFonts.HelveticaBoldOblique),
-  };
+  const fonts = {};
+  for (const [family, [normal, bold, italic, boldItalic]] of Object.entries(FONT_FAMILIES)) {
+    fonts[family] = {
+      normal: await pdfDoc.embedFont(normal),
+      bold: await pdfDoc.embedFont(bold),
+      italic: await pdfDoc.embedFont(italic),
+      boldItalic: await pdfDoc.embedFont(boldItalic),
+    };
+  }
+  return fonts;
 }
 
 function pickFont(fonts, overlay) {
-  if (overlay.bold && overlay.italic) return fonts.boldItalic;
-  if (overlay.bold) return fonts.bold;
-  if (overlay.italic) return fonts.italic;
-  return fonts.normal;
+  const family = fonts[overlay.fontFamily] ?? fonts.helvetica;
+  if (overlay.bold && overlay.italic) return family.boldItalic;
+  if (overlay.bold) return family.bold;
+  if (overlay.italic) return family.italic;
+  return family.normal;
+}
+
+function hexToRgb(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex ?? '');
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
 
 async function drawOverlay(pdfDoc, page, overlay, fonts) {
@@ -60,7 +78,7 @@ async function drawOverlay(pdfDoc, page, overlay, fonts) {
         y: overlay.y + (lines.length - 1 - i) * lineHeight,
         size,
         font,
-        color: rgb(0, 0, 0),
+        color: hexToRgb(overlay.color) ?? rgb(0, 0, 0),
       });
     });
   }
