@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2, Eraser } from 'lucide-react';
+import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2, Eraser, HelpCircle } from 'lucide-react';
 import { useStore } from '../state/store.js';
 import { exportPdf } from '../lib/exportPdf.js';
 import { loadPdfFile } from '../lib/loadFile.js';
@@ -12,7 +12,7 @@ export default function Toolbar() {
   const {
     fileName, doc, zoom, loading, theme, fieldValues,
     pastHistory, futureHistory, undo, redo,
-    setZoom, reset, toggleTheme, addToast, clearAllFields,
+    setZoom, reset, toggleTheme, addToast, clearAllFields, setActiveModal,
   } = useStore();
   const hasFilledFields = Object.keys(fieldValues).length > 0;
 
@@ -123,6 +123,12 @@ export default function Toolbar() {
 
           <div className="header-divider" />
         </>
+      )}
+
+      {doc && (
+        <button className="header-btn-icon" onClick={() => setActiveModal('shortcuts')} aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
+          <HelpCircle size={16} strokeWidth={1.75} />
+        </button>
       )}
 
       {/* Theme toggle */}

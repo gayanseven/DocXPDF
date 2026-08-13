@@ -224,6 +224,8 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                           className={`text-format-btn${(overlay.textAlign ?? 'left') === id ? ' text-format-btn--active' : ''}`}
                           onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { textAlign: id }); }}
                           title={`Align ${id}`}
+                          aria-label={`Align ${id}`}
+                          aria-pressed={(overlay.textAlign ?? 'left') === id}
                         >
                           {icon}
                         </button>
@@ -277,6 +279,8 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                           style={{ background: color }}
                           onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { color }); }}
                           title={color}
+                          aria-label={`Text color ${color}`}
+                          aria-pressed={(overlay.color ?? DEFAULT_COLOR) === color}
                         />
                       ))}
                       <input
@@ -291,6 +295,7 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                           colorEditBefore.current = null;
                         }}
                         title="Custom color"
+                        aria-label="Custom text color"
                       />
                     </div>
                   </div>
@@ -335,6 +340,7 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => { e.stopPropagation(); removeOverlay(overlay.id); addToast({ type: 'info', message: 'Removed' }); }}
                   title="Remove"
+                  aria-label="Remove overlay"
                 >
                   <X size={10} strokeWidth={2} />
                 </button>

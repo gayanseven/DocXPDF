@@ -17,6 +17,15 @@ body {
 
 button, input, textarea, select { font-family: inherit; color: inherit; }
 
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* ── App shell ──────────────────────────────────────────────────────────── */
 .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 

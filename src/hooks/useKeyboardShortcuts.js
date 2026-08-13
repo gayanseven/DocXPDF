@@ -10,6 +10,8 @@ export function useKeyboardShortcuts() {
       if (!s.doc || s.pendingSignature) return;
       const isEditable = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
 
+      if (e.key === '?' && !isEditable) { e.preventDefault(); s.setActiveModal('shortcuts'); return; }
+
       if ((e.metaKey || e.ctrlKey) && !isEditable) {
         const key = e.key.toLowerCase();
         if (key === 'z' && !e.shiftKey) { e.preventDefault(); s.undo(); return; }

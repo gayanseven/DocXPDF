@@ -300,6 +300,7 @@ function SavedTab({ onPlace, onCancel }) {
               className="sig-saved-remove"
               onClick={(e) => { e.stopPropagation(); deleteSignature(sig.id); }}
               title="Delete"
+              aria-label="Delete saved signature"
             >
               <Trash2 size={10} strokeWidth={2} />
             </button>

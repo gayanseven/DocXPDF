@@ -6,8 +6,8 @@
   left: calc(100% + 10px);
   top: 50%;
   transform: translateY(-50%);
-  background: var(--text-primary);
-  color: var(--surface-panel);
+  background: var(--chrome-dark-bg);
+  color: var(--chrome-dark-text);
   font-size: var(--text-xs);
   font-weight: 600;
   padding: 4px 10px;
@@ -25,7 +25,7 @@
   top: 50%;
   transform: translateY(-50%);
   border: 5px solid transparent;
-  border-right-color: var(--text-primary);
+  border-right-color: var(--chrome-dark-bg);
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--duration-fast) 300ms;
@@ -207,8 +207,8 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: var(--text-primary);
-  color: var(--surface-panel);
+  background: var(--chrome-dark-bg);
+  color: var(--chrome-dark-text);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   font-size: var(--text-base);
@@ -243,6 +243,28 @@
   transition: color var(--duration-fast), background var(--duration-fast);
 }
 .toast-close:hover { color: #fff; background: rgba(255, 255, 255, 0.12); }
+
+/* ── Keyboard shortcuts help ────────────────────────────────────────────── */
+.shortcuts-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.shortcuts-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.shortcuts-keys { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.shortcuts-desc { font-size: var(--text-base); color: var(--text-secondary); }
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  box-shadow: 0 1px 0 var(--border-strong);
+}
 
 /* ── Spinner ────────────────────────────────────────────────────────────── */
 .spin { animation: spin 800ms linear infinite; transform-origin: center; }

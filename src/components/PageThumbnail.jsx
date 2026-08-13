@@ -47,12 +47,12 @@ export default function PageThumbnail({ item, index, displayNumber, dragging, on
       <div className="page-thumb-footer">
         <span className="page-thumb-num">{displayNumber}</span>
         <div className="page-thumb-actions">
-          <button title="Rotate left" onClick={() => rotatePageItem(item.id, -90)}><RotateCcw size={13} strokeWidth={1.75} /></button>
-          <button title="Rotate right" onClick={() => rotatePageItem(item.id, 90)}><RotateCw size={13} strokeWidth={1.75} /></button>
+          <button title="Rotate left" aria-label="Rotate left" onClick={() => rotatePageItem(item.id, -90)}><RotateCcw size={13} strokeWidth={1.75} /></button>
+          <button title="Rotate right" aria-label="Rotate right" onClick={() => rotatePageItem(item.id, 90)}><RotateCw size={13} strokeWidth={1.75} /></button>
           {!item.isBlank && (
-            <button title="Duplicate" onClick={() => duplicatePageItem(item.id)}><Copy size={13} strokeWidth={1.75} /></button>
+            <button title="Duplicate" aria-label="Duplicate page" onClick={() => duplicatePageItem(item.id)}><Copy size={13} strokeWidth={1.75} /></button>
           )}
-          <button title="Delete" disabled={pageCount <= 1} onClick={() => deletePageItem(item.id)}>
+          <button title="Delete" aria-label="Delete page" disabled={pageCount <= 1} onClick={() => deletePageItem(item.id)}>
             <Trash2 size={13} strokeWidth={1.75} />
           </button>
         </div>

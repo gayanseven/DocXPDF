@@ -25,11 +25,12 @@ export default function PageManagerPanel() {
           <button
             className="header-btn-icon"
             title="Insert blank page"
+            aria-label="Insert blank page"
             onClick={() => insertBlankPageItem(pageLayout[pageLayout.length - 1]?.id)}
           >
             <FilePlus2 size={15} strokeWidth={1.75} />
           </button>
-          <button className="header-btn-icon" title="Hide panel" onClick={toggleThumbnailPanel}>
+          <button className="header-btn-icon" title="Hide panel" aria-label="Hide pages panel" onClick={toggleThumbnailPanel}>
             <X size={15} strokeWidth={1.75} />
           </button>
         </div>

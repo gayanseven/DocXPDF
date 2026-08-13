@@ -28,6 +28,8 @@ export default function AnnotateToolbar() {
             className={`annotate-toolbar-btn${annotateSubTool === id ? ' annotate-toolbar-btn--active' : ''}`}
             onClick={() => setAnnotateSubTool(id)}
             title={label}
+            aria-label={label}
+            aria-pressed={annotateSubTool === id}
           >
             <Icon size={15} strokeWidth={1.75} />
           </button>
@@ -42,6 +44,8 @@ export default function AnnotateToolbar() {
             style={{ background: c }}
             onClick={() => setAnnotateColor(c)}
             title={c}
+            aria-label={`Color ${c}`}
+            aria-pressed={annotateColor === c}
           />
         ))}
       </div>
@@ -53,6 +57,8 @@ export default function AnnotateToolbar() {
             className={`annotate-toolbar-btn${annotateStrokeWidth === w ? ' annotate-toolbar-btn--active' : ''}`}
             onClick={() => setAnnotateStrokeWidth(w)}
             title={`${w}px`}
+            aria-label={`Stroke width ${w}px`}
+            aria-pressed={annotateStrokeWidth === w}
           >
             <span className="annotate-toolbar-width-dot" style={{ width: w + 3, height: w + 3 }} />
           </button>

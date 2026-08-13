@@ -76,6 +76,14 @@
   --duration-base: 180ms;
   --duration-slow: 260ms;
 
+  /* Floating "always dark" chrome (tooltips, toasts, floating toolbars) —
+     intentionally NOT redefined under [data-theme="dark"]. These read as a
+     dark pill in both themes (like a Notion/Figma floating toolbar), rather
+     than inverting to a light pill when the app itself goes dark. */
+  --chrome-dark-bg: #18181b;
+  --chrome-dark-text: #f4f4f5;
+  --chrome-dark-text-muted: rgba(255, 255, 255, 0.65);
+
   --header-h: 56px;
   --rail-w: 56px;
 

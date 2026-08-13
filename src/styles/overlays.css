@@ -102,7 +102,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  background: var(--text-primary);
+  background: var(--chrome-dark-bg);
   border-radius: var(--radius-sm);
   padding: 4px;
   box-shadow: var(--shadow-lg);
@@ -121,7 +121,7 @@
   border-radius: 4px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--chrome-dark-text-muted);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -151,8 +151,8 @@
 }
 
 /* ── Annotation layer (freehand pen/highlighter/shapes) ─────────────────── */
-.annotation-layer { position: absolute; inset: 0; z-index: 2; }
-.annotation-layer--active { cursor: crosshair; }
+.annotation-layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.annotation-layer--active { pointer-events: auto; cursor: crosshair; }
 
 /* ── Floating annotate sub-toolbar ──────────────────────────────────────── */
 .annotate-toolbar {
@@ -160,7 +160,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  background: var(--text-primary);
+  background: var(--chrome-dark-bg);
   border-radius: var(--radius);
   padding: 5px;
   box-shadow: var(--shadow-lg);
@@ -177,7 +177,7 @@
   border-radius: 5px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--chrome-dark-text-muted);
   cursor: pointer;
   transition: background var(--duration-fast), color var(--duration-fast);
 }
