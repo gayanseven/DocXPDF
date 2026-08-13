@@ -12,6 +12,8 @@ import EmptyState from './components/EmptyState.jsx';
 import SignatureModal from './components/SignatureModal.jsx';
 import WatermarkModal from './components/WatermarkModal.jsx';
 import PageNumbersModal from './components/PageNumbersModal.jsx';
+import MergeModal from './components/MergeModal.jsx';
+import SplitModal from './components/SplitModal.jsx';
 import RecoveryBanner from './components/RecoveryBanner.jsx';
 import Toast from './components/Toast.jsx';
 
@@ -68,6 +70,8 @@ export default function App() {
       )}
       {activeModal === 'watermark' && <WatermarkModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'pageNumbers' && <PageNumbersModal onClose={() => setActiveModal(null)} />}
+      {activeModal === 'merge' && <MergeModal onClose={() => setActiveModal(null)} />}
+      {activeModal === 'split' && <SplitModal onClose={() => setActiveModal(null)} />}
       <Toast />
     </div>
   );

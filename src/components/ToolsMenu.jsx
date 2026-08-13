@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Stamp, Hash } from 'lucide-react';
+import { MoreHorizontal, Stamp, Hash, Combine, Scissors } from 'lucide-react';
 import { useStore } from '../state/store.js';
 
 export default function ToolsMenu() {
@@ -31,6 +31,12 @@ export default function ToolsMenu() {
           </button>
           <button className="tools-menu-item" onClick={() => openModal('pageNumbers')}>
             <Hash size={15} strokeWidth={1.75} /> Page numbers
+          </button>
+          <button className="tools-menu-item" onClick={() => openModal('merge')}>
+            <Combine size={15} strokeWidth={1.75} /> Merge PDFs
+          </button>
+          <button className="tools-menu-item" onClick={() => openModal('split')}>
+            <Scissors size={15} strokeWidth={1.75} /> Split / Extract
           </button>
         </div>
       )}

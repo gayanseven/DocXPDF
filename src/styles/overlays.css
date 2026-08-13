@@ -194,6 +194,52 @@
 }
 .annotate-toolbar-swatch--active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25); }
 
+/* ── Merge queue ─────────────────────────────────────────────────────────── */
+.merge-queue { display: flex; flex-direction: column; gap: var(--space-2); }
+.merge-queue-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  transition: opacity var(--duration-fast);
+  color: var(--text-muted);
+}
+.merge-queue-item--dragging { opacity: 0.4; }
+.merge-queue-name { flex: 1 1 auto; font-size: var(--text-base); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.merge-queue-remove {
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border: none; background: transparent;
+  color: var(--text-muted); border-radius: 4px; cursor: pointer;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+.merge-queue-remove:hover { background: var(--danger-subtle); color: var(--danger); }
+.merge-add-btn { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
+
+/* ── Split / extract page grid ──────────────────────────────────────────── */
+.split-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--space-3); }
+.split-thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  position: relative;
+}
+.split-thumb input { position: absolute; top: 4px; left: 4px; z-index: 1; accent-color: var(--accent); cursor: pointer; }
+.split-thumb canvas {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--duration-fast);
+}
+.split-thumb--selected canvas { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-subtle); }
+.split-thumb-num { font-size: var(--text-xs); color: var(--text-muted); }
+
 /* ── Signature modal content ────────────────────────────────────────────── */
 .sig-hint { margin: 0; font-size: var(--text-base); color: var(--text-secondary); }
 .sig-canvas-wrap {
