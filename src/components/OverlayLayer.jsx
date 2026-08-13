@@ -14,6 +14,7 @@ const ALIGNMENTS = [
 export default function OverlayLayer({ pageNumber }) {
   const layerRef = useRef(null);
   const justAddedId = useRef(null);
+  const textEditBefore = useRef(null);
   const zoom = useStore((s) => s.zoom);
   const pages = useStore((s) => s.pages);
   const overlays = useStore((s) => s.overlays);
@@ -22,10 +23,20 @@ export default function OverlayLayer({ pageNumber }) {
   const addOverlay = useStore((s) => s.addOverlay);
   const updateOverlay = useStore((s) => s.updateOverlay);
   const removeOverlay = useStore((s) => s.removeOverlay);
+  const commitOverlayHistory = useStore((s) => s.commitOverlayHistory);
   const setSelectedOverlay = useStore((s) => s.setSelectedOverlay);
   const setActiveTool = useStore((s) => s.setActiveTool);
   const setPendingSignature = useStore((s) => s.setPendingSignature);
   const addToast = useStore((s) => s.addToast);
+
+  // Discrete (single-click) edits commit their own history entry immediately,
+  // as opposed to continuous gestures (drag/resize/typing) which commit once
+  // at gesture-end — see startDrag/startResize and the text input's blur.
+  function updateOverlayCommitted(id, patch) {
+    const before = useStore.getState().overlays;
+    updateOverlay(id, patch);
+    commitOverlayHistory(before);
+  }
 
   const pageInfo = pages.find((p) => p.index === pageNumber);
   const isSelect = activeTool === 'select';
@@ -106,6 +117,7 @@ export default function OverlayLayer({ pageNumber }) {
     const sx = e.clientX, sy = e.clientY;
     const ox = overlay.x, oy = overlay.y;
     const z = zoom;
+    const before = useStore.getState().overlays;
 
     function onMove(ev) {
       updateOverlay(overlay.id, {
@@ -116,6 +128,7 @@ export default function OverlayLayer({ pageNumber }) {
     function onUp() {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
+      commitOverlayHistory(before);
     }
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
@@ -129,6 +142,7 @@ export default function OverlayLayer({ pageNumber }) {
     const sw = overlay.w, sh = overlay.h, spy = overlay.y;
     const z = zoom;
     const ratio = sw / sh;
+    const before = useStore.getState().overlays;
 
     function onMove(ev) {
       const dw = (ev.clientX - sx) / z;
@@ -145,6 +159,7 @@ export default function OverlayLayer({ pageNumber }) {
     function onUp() {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
+      commitOverlayHistory(before);
     }
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
@@ -181,7 +196,7 @@ export default function OverlayLayer({ pageNumber }) {
                         <button
                           key={id}
                           className={`text-format-btn${(overlay.textAlign ?? 'left') === id ? ' text-format-btn--active' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); updateOverlay(overlay.id, { textAlign: id }); }}
+                          onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { textAlign: id }); }}
                           title={`Align ${id}`}
                         >
                           {icon}
@@ -192,12 +207,12 @@ export default function OverlayLayer({ pageNumber }) {
                     <div className="text-format-group">
                       <button
                         className={`text-format-btn text-format-btn--bold${overlay.bold ? ' text-format-btn--active' : ''}`}
-                        onClick={(e) => { e.stopPropagation(); updateOverlay(overlay.id, { bold: !overlay.bold }); }}
+                        onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { bold: !overlay.bold }); }}
                         title="Bold"
                       >B</button>
                       <button
                         className={`text-format-btn text-format-btn--italic${overlay.italic ? ' text-format-btn--active' : ''}`}
-                        onClick={(e) => { e.stopPropagation(); updateOverlay(overlay.id, { italic: !overlay.italic }); }}
+                        onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { italic: !overlay.italic }); }}
                         title="Italic"
                       >I</button>
                     </div>
@@ -207,7 +222,7 @@ export default function OverlayLayer({ pageNumber }) {
                         <button
                           key={label}
                           className={`text-format-btn${overlay.fontSize === size ? ' text-format-btn--active' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); updateOverlay(overlay.id, { fontSize: size }); }}
+                          onClick={(e) => { e.stopPropagation(); updateOverlayCommitted(overlay.id, { fontSize: size }); }}
                           title={`Font size ${label}`}
                         >
                           {label.toUpperCase()}
@@ -222,7 +237,14 @@ export default function OverlayLayer({ pageNumber }) {
                   style={{ fontSize: Math.round(overlay.fontSize * zoom), textAlign: overlay.textAlign ?? 'left', fontWeight: overlay.bold ? '700' : '400', fontStyle: overlay.italic ? 'italic' : 'normal' }}
                   onChange={(e) => updateOverlay(overlay.id, { text: e.target.value })}
                   onMouseDown={(e) => e.stopPropagation()}
-                  onFocus={() => isSelect && setSelectedOverlay(overlay.id)}
+                  onFocus={() => {
+                    if (isSelect) setSelectedOverlay(overlay.id);
+                    textEditBefore.current = useStore.getState().overlays;
+                  }}
+                  onBlur={() => {
+                    if (textEditBefore.current) commitOverlayHistory(textEditBefore.current);
+                    textEditBefore.current = null;
+                  }}
                   placeholder="Type here…"
                 />
               </>

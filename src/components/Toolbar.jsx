@@ -1,13 +1,18 @@
-import { useRef, useState, useEffect } from 'react';
-import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2 } from 'lucide-react';
 import { useStore } from '../state/store.js';
 import { exportPdf } from '../lib/exportPdf.js';
 import { loadPdfFile } from '../lib/loadFile.js';
+import { clearSession } from '../lib/persistence.js';
 
 export default function Toolbar() {
   const inputRef = useRef(null);
   const [exporting, setExporting] = useState(false);
-  const { fileName, doc, zoom, pendingSignature, loading, theme, setZoom, reset, toggleTheme, addToast } = useStore();
+  const {
+    fileName, doc, zoom, loading, theme,
+    pastHistory, futureHistory, undo, redo,
+    setZoom, reset, toggleTheme, addToast,
+  } = useStore();
 
   async function onFile(e) {
     const file = e.target.files?.[0];
@@ -35,19 +40,10 @@ export default function Toolbar() {
     }
   }
 
-  useEffect(() => {
-    if (!doc || pendingSignature) return;
-    function onKey(e) {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const { setActiveTool } = useStore.getState();
-      if (e.key === 'v' || e.key === 'V') setActiveTool('select');
-      if (e.key === 't' || e.key === 'T') setActiveTool('text');
-      if (e.key === 's' || e.key === 'S') setActiveTool('signature');
-    }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [doc, pendingSignature]);
+  function onClose() {
+    clearSession();
+    reset();
+  }
 
   const baseName = fileName ? fileName.replace(/\.pdf$/i, '') : null;
 
@@ -67,6 +63,16 @@ export default function Toolbar() {
             <span className="header-filename">{baseName}</span>
             <span className="header-badge">PDF</span>
           </div>
+
+          <div className="header-divider" />
+
+          {/* Undo / redo */}
+          <button className="header-btn-icon" onClick={undo} disabled={pastHistory.length === 0} aria-label="Undo" title="Undo (Ctrl+Z)">
+            <Undo2 size={16} strokeWidth={1.75} />
+          </button>
+          <button className="header-btn-icon" onClick={redo} disabled={futureHistory.length === 0} aria-label="Redo" title="Redo (Ctrl+Shift+Z)">
+            <Redo2 size={16} strokeWidth={1.75} />
+          </button>
         </>
       )}
 
@@ -103,7 +109,7 @@ export default function Toolbar() {
       </button>
 
       {doc && (
-        <button className="header-btn-close" onClick={reset} aria-label="Close document" title="Close document">
+        <button className="header-btn-close" onClick={onClose} aria-label="Close document" title="Close document">
           <X size={16} strokeWidth={2} />
         </button>
       )}

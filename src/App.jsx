@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
 import { useStore } from './state/store.js';
+import { useSessionRecovery } from './hooks/useSessionRecovery.js';
+import { useAutosave } from './hooks/useAutosave.js';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts.js';
 import Toolbar from './components/Toolbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import PdfViewer from './components/PdfViewer.jsx';
 import EmptyState from './components/EmptyState.jsx';
 import SignatureModal from './components/SignatureModal.jsx';
+import RecoveryBanner from './components/RecoveryBanner.jsx';
 import Toast from './components/Toast.jsx';
 
 export default function App() {
@@ -18,6 +22,10 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  useSessionRecovery();
+  useAutosave();
+  useKeyboardShortcuts();
 
   function handleSignaturePlace(dataUrl) {
     const p = pendingSignature;
@@ -35,6 +43,7 @@ export default function App() {
   return (
     <div className="app">
       <Toolbar />
+      <RecoveryBanner />
       <div className="body">
         <Sidebar />
         <main className="stage">
