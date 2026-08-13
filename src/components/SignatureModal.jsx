@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { X, UploadCloud } from 'lucide-react';
 
 const TABS = ['Draw', 'Type', 'Upload'];
 
@@ -6,22 +7,20 @@ export default function SignatureModal({ onPlace, onCancel }) {
   const [activeTab, setActiveTab] = useState('Draw');
 
   return (
-    <div className="sig-backdrop" onClick={onCancel}>
-      <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="sig-header">
-          <h3 className="sig-title">Add Signature</h3>
-          <button className="sig-close" onClick={onCancel} aria-label="Close">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
+    <div className="modal-backdrop" onClick={onCancel}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3 className="modal-title">Add Signature</h3>
+          <button className="modal-close" onClick={onCancel} aria-label="Close">
+            <X size={16} strokeWidth={1.75} />
           </button>
         </div>
 
-        <div className="sig-tabs">
+        <div className="modal-tabs">
           {TABS.map((tab) => (
             <button
               key={tab}
-              className={`sig-tab${activeTab === tab ? ' sig-tab--active' : ''}`}
+              className={`modal-tab${activeTab === tab ? ' modal-tab--active' : ''}`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
@@ -29,7 +28,7 @@ export default function SignatureModal({ onPlace, onCancel }) {
           ))}
         </div>
 
-        <div className="sig-body">
+        <div className="modal-body">
           {activeTab === 'Draw' && <DrawTab onPlace={onPlace} onCancel={onCancel} />}
           {activeTab === 'Type' && <TypeTab onPlace={onPlace} onCancel={onCancel} />}
           {activeTab === 'Upload' && <UploadTab onPlace={onPlace} onCancel={onCancel} />}
@@ -109,11 +108,11 @@ function DrawTab({ onPlace, onCancel }) {
         />
         <span className="sig-canvas-placeholder">Sign here</span>
       </div>
-      <div className="sig-actions">
-        <button className="sig-btn-ghost" onClick={clear}>Clear</button>
-        <div className="sig-actions-right">
-          <button className="sig-btn-ghost" onClick={onCancel}>Cancel</button>
-          <button className="sig-btn-primary" onClick={place} disabled={!hasStroke}>Place</button>
+      <div className="modal-actions">
+        <button className="btn-ghost" onClick={clear}>Clear</button>
+        <div className="modal-actions-right">
+          <button className="btn-ghost" onClick={onCancel}>Cancel</button>
+          <button className="btn-primary" onClick={place} disabled={!hasStroke}>Place</button>
         </div>
       </div>
     </>
@@ -157,11 +156,11 @@ function TypeTab({ onPlace, onCancel }) {
           </span>
         </div>
       )}
-      <div className="sig-actions">
+      <div className="modal-actions">
         <div />
-        <div className="sig-actions-right">
-          <button className="sig-btn-ghost" onClick={onCancel}>Cancel</button>
-          <button className="sig-btn-primary" onClick={place} disabled={!text.trim()}>Place</button>
+        <div className="modal-actions-right">
+          <button className="btn-ghost" onClick={onCancel}>Cancel</button>
+          <button className="btn-primary" onClick={place} disabled={!text.trim()}>Place</button>
         </div>
       </div>
     </>
@@ -216,26 +215,24 @@ function UploadTab({ onPlace, onCancel }) {
       <p className="sig-hint">Upload a PNG or JPG image of your signature</p>
       {!dataUrl ? (
         <div className="sig-upload-zone" onClick={() => inputRef.current?.click()}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-          </svg>
+          <UploadCloud size={30} strokeWidth={1.5} />
           <span>Click to choose an image</span>
           <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={onFile} />
         </div>
       ) : (
         <div className="sig-upload-preview">
           <img src={dataUrl} alt="Signature preview" />
-          <button className="sig-btn-ghost sig-upload-change" onClick={() => { setDataUrl(null); inputRef.current?.click(); }}>
+          <button className="btn-ghost sig-upload-change" onClick={() => { setDataUrl(null); inputRef.current?.click(); }}>
             Change
           </button>
           <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={onFile} />
         </div>
       )}
-      <div className="sig-actions">
+      <div className="modal-actions">
         <div />
-        <div className="sig-actions-right">
-          <button className="sig-btn-ghost" onClick={onCancel}>Cancel</button>
-          <button className="sig-btn-primary" onClick={() => onPlace(dataUrl)} disabled={!dataUrl}>Place</button>
+        <div className="modal-actions-right">
+          <button className="btn-ghost" onClick={onCancel}>Cancel</button>
+          <button className="btn-primary" onClick={() => onPlace(dataUrl)} disabled={!dataUrl}>Place</button>
         </div>
       </div>
     </>

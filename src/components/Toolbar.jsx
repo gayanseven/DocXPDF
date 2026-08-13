@@ -1,26 +1,18 @@
 import { useRef, useState, useEffect } from 'react';
+import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon } from 'lucide-react';
 import { useStore } from '../state/store.js';
-import { loadPdf, getPageSizes } from '../lib/pdfRender.js';
 import { exportPdf } from '../lib/exportPdf.js';
+import { loadPdfFile } from '../lib/loadFile.js';
 
 export default function Toolbar() {
   const inputRef = useRef(null);
   const [exporting, setExporting] = useState(false);
-  const { fileName, doc, zoom, pendingSignature, setDoc, setZoom, reset, addToast } = useStore();
+  const { fileName, doc, zoom, pendingSignature, loading, theme, setZoom, reset, toggleTheme, addToast } = useStore();
 
   async function onFile(e) {
     const file = e.target.files?.[0];
-    if (!file) return;
     e.target.value = '';
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await loadPdf(arrayBuffer);
-      const pages = await getPageSizes(pdf);
-      setDoc({ fileName: file.name, arrayBuffer, doc: pdf, pages });
-      addToast({ type: 'success', message: `"${file.name}" loaded` });
-    } catch {
-      addToast({ type: 'error', message: 'Failed to load PDF' });
-    }
+    if (file) await loadPdfFile(file);
   }
 
   async function onExport() {
@@ -61,20 +53,22 @@ export default function Toolbar() {
 
   return (
     <header className="header">
-      {/* Brand */}
-      <button className="header-brand" onClick={() => inputRef.current?.click()} title="Open PDF">
-        <span className="header-brand-docx">DOCX</span>
-        <span className="header-brand-pdf">PDF</span>
+      {/* Brand / open */}
+      <button className="header-brand" onClick={() => inputRef.current?.click()} title="Open PDF" disabled={loading}>
+        {loading ? <Loader2 size={18} className="spin" /> : <FolderOpen size={18} strokeWidth={1.75} />}
+        <span className="header-brand-text">PDF Editor</span>
       </button>
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={onFile} />
 
-      <div className="header-divider" />
-
-      {/* File name */}
-      <div className="header-file">
-        <span className="header-filename">{baseName ?? 'Untitled'}</span>
-        <span className="header-badge">PDF</span>
-      </div>
+      {doc && (
+        <>
+          <div className="header-divider" />
+          <div className="header-file">
+            <span className="header-filename">{baseName}</span>
+            <span className="header-badge">PDF</span>
+          </div>
+        </>
+      )}
 
       <div className="header-spacer" />
 
@@ -83,15 +77,11 @@ export default function Toolbar() {
           {/* Zoom */}
           <div className="header-zoom">
             <button className="header-zoom-btn" onClick={() => setZoom(zoom - 0.15)} aria-label="Zoom out">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6h8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-              </svg>
+              <Minus size={13} strokeWidth={2} />
             </button>
             <span className="header-zoom-val">{Math.round(zoom * 100)}%</span>
             <button className="header-zoom-btn" onClick={() => setZoom(zoom + 0.15)} aria-label="Zoom in">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-              </svg>
+              <Plus size={13} strokeWidth={2} />
             </button>
           </div>
 
@@ -99,27 +89,23 @@ export default function Toolbar() {
 
           {/* Export */}
           <button className="header-btn-export" onClick={onExport} disabled={exporting}>
-            {exporting ? (
-              <svg width="14" height="14" viewBox="0 0 14 14" className="spin" fill="none">
-                <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" strokeDasharray="18 13"/>
-              </svg>
-            ) : (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1v8M4 6l3 4 3-4M1 12h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
+            {exporting ? <Loader2 size={14} className="spin" /> : <Download size={14} strokeWidth={2} />}
             {exporting ? 'Exporting…' : 'Export'}
           </button>
 
           <div className="header-divider" />
-
-          {/* Close */}
-          <button className="header-btn-close" onClick={reset} aria-label="Close document">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
         </>
+      )}
+
+      {/* Theme toggle */}
+      <button className="header-btn-icon" onClick={toggleTheme} aria-label="Toggle theme" title="Toggle theme">
+        {theme === 'dark' ? <Sun size={16} strokeWidth={1.75} /> : <Moon size={16} strokeWidth={1.75} />}
+      </button>
+
+      {doc && (
+        <button className="header-btn-close" onClick={reset} aria-label="Close document" title="Close document">
+          <X size={16} strokeWidth={2} />
+        </button>
       )}
     </header>
   );

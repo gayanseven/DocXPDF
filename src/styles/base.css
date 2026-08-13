@@ -1,0 +1,33 @@
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--surface-app);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--duration-base) var(--ease-standard),
+              color var(--duration-base) var(--ease-standard);
+}
+
+button, input, textarea, select { font-family: inherit; color: inherit; }
+
+/* ── App shell ──────────────────────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
+}
+
+.stage {
+  flex: 1 1 auto;
+  overflow: auto;
+  background: var(--surface-sunken);
+}

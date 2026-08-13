@@ -21,17 +21,24 @@ export async function loadPdf(arrayBuffer) {
   return task.promise;
 }
 
+// Tracks the in-flight pdfjs render task per canvas so a second render call
+// (React StrictMode's double effect-invoke, or a rapid zoom change) cancels
+// the stale one instead of racing it — pdfjs throws if two renders share a
+// canvas concurrently.
+const inFlightRenders = new WeakMap();
+
 /**
  * Render one page onto a canvas at the given scale.
  * @param {import('pdfjs-dist').PDFDocumentProxy} doc
  * @param {number} pageNumber 1-based
  * @param {HTMLCanvasElement} canvas
  * @param {number} scale
- * @returns {Promise<{width:number,height:number}>} CSS pixel size of the canvas
+ * @param {number} [rotation] additional rotation in degrees (0/90/180/270), on top of the page's own rotation
+ * @returns {Promise<{width:number,height:number}|null>} CSS pixel size of the canvas, or null if superseded
  */
-export async function renderPage(doc, pageNumber, canvas, scale) {
+export async function renderPage(doc, pageNumber, canvas, scale, rotation = 0) {
   const page = await doc.getPage(pageNumber);
-  const viewport = page.getViewport({ scale });
+  const viewport = page.getViewport({ scale, rotation: (page.rotate + rotation) % 360 });
   const ctx = canvas.getContext('2d');
 
   // Handle high-DPI screens crisply.
@@ -42,7 +49,18 @@ export async function renderPage(doc, pageNumber, canvas, scale) {
   canvas.style.height = `${Math.floor(viewport.height)}px`;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  await page.render({ canvasContext: ctx, viewport }).promise;
+  inFlightRenders.get(canvas)?.cancel();
+  const task = page.render({ canvasContext: ctx, viewport });
+  inFlightRenders.set(canvas, task);
+
+  try {
+    await task.promise;
+  } catch (err) {
+    if (err?.name === 'RenderingCancelledException') return null;
+    throw err;
+  } finally {
+    if (inFlightRenders.get(canvas) === task) inFlightRenders.delete(canvas);
+  }
   return { width: viewport.width, height: viewport.height };
 }
 

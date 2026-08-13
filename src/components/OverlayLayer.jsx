@@ -1,30 +1,15 @@
 import { useRef, useEffect } from 'react';
+import { AlignLeft, AlignCenter, AlignRight, X } from 'lucide-react';
 import { useStore } from '../state/store.js';
+import { pdfToScreen, screenToPdf } from '../lib/coords.js';
 
 const FONT_SIZES = { xs: 10, sm: 12, md: 14, lg: 16, xl: 22 };
 
-const AlignLeftIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M1 3h12M1 7h8M1 11h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-);
-const AlignCenterIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M1 3h12M3 7h8M2 11h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-);
-const AlignRightIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M1 3h12M5 7h8M3 11h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-);
-
 const ALIGNMENTS = [
-  { id: 'left',   icon: <AlignLeftIcon /> },
-  { id: 'center', icon: <AlignCenterIcon /> },
-  { id: 'right',  icon: <AlignRightIcon /> },
+  { id: 'left',   icon: <AlignLeft size={14} strokeWidth={1.75} /> },
+  { id: 'center', icon: <AlignCenter size={14} strokeWidth={1.75} /> },
+  { id: 'right',  icon: <AlignRight size={14} strokeWidth={1.75} /> },
 ];
-import { pdfToScreen, screenToPdf } from '../lib/coords.js';
 
 export default function OverlayLayer({ pageNumber }) {
   const layerRef = useRef(null);
@@ -258,9 +243,7 @@ export default function OverlayLayer({ pageNumber }) {
                   onClick={(e) => { e.stopPropagation(); removeOverlay(overlay.id); addToast({ type: 'info', message: 'Removed' }); }}
                   title="Remove"
                 >
-                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                    <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
+                  <X size={10} strokeWidth={2} />
                 </button>
               </>
             )}

@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 
-export const useStore = create((set) => ({
+function getInitialTheme() {
+  const saved = localStorage.getItem('pdfeditor.theme');
+  if (saved === 'light' || saved === 'dark') return saved;
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+export const useStore = create((set, get) => ({
   fileName: null,
   arrayBuffer: null,
   doc: null,
@@ -12,6 +18,8 @@ export const useStore = create((set) => ({
   pendingSignature: null,
   toasts: [],
   selectedOverlayId: null,
+  theme: getInitialTheme(),
+  loading: false,
 
   setDoc: ({ fileName, arrayBuffer, doc, pages }) =>
     set({ fileName, arrayBuffer, doc, pages, fieldValues: {}, overlays: [], selectedOverlayId: null }),
@@ -40,6 +48,19 @@ export const useStore = create((set) => ({
   setSelectedOverlay: (id) => set({ selectedOverlayId: id }),
 
   setPendingSignature: (val) => set({ pendingSignature: val }),
+
+  setLoading: (loading) => set({ loading }),
+
+  setTheme: (theme) => {
+    localStorage.setItem('pdfeditor.theme', theme);
+    set({ theme });
+  },
+
+  toggleTheme: () => {
+    const next = get().theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('pdfeditor.theme', next);
+    set({ theme: next });
+  },
 
   addToast: ({ type = 'info', message, duration = 3000 }) =>
     set((s) => {
