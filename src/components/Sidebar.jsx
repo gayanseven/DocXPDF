@@ -1,4 +1,4 @@
-import { MousePointer2, Type, PenTool } from 'lucide-react';
+import { Layers, MousePointer2, Type, PenTool } from 'lucide-react';
 import { useStore } from '../state/store.js';
 
 const TOOLS = [
@@ -8,11 +8,23 @@ const TOOLS = [
 ];
 
 export default function Sidebar() {
-  const { doc, activeTool, setActiveTool } = useStore();
+  const { doc, activeTool, setActiveTool, thumbnailPanelOpen, toggleThumbnailPanel } = useStore();
 
   return (
     <aside className="sidebar">
       <div className="sidebar-tools">
+        <div className="has-tooltip" data-tooltip="Pages">
+          <button
+            className={`sidebar-btn${thumbnailPanelOpen ? ' sidebar-btn--active' : ''}`}
+            onClick={() => doc && toggleThumbnailPanel()}
+            aria-label="Pages"
+            aria-pressed={thumbnailPanelOpen}
+            disabled={!doc}
+          >
+            <Layers size={18} strokeWidth={1.75} />
+          </button>
+        </div>
+        <div className="sidebar-sep" />
         {TOOLS.map(({ id, tooltip, Icon }) => (
           <div key={id} className="has-tooltip" data-tooltip={tooltip}>
             <button

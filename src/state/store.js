@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import { loadPdf, getPageSizes } from '../lib/pdfRender.js';
+import { defaultPageLayout } from './pageLayout.js';
 import { createDocumentSlice } from './slices/documentSlice.js';
 import { createToolSlice } from './slices/toolSlice.js';
 import { createOverlaySlice } from './slices/overlaySlice.js';
 import { createFormSlice } from './slices/formSlice.js';
 import { createUiSlice } from './slices/uiSlice.js';
 import { createHistorySlice } from './slices/historySlice.js';
+import { createPageOpsSlice } from './slices/pageOpsSlice.js';
 
 export const useStore = create((set, get) => ({
   ...createDocumentSlice(set, get),
@@ -14,6 +16,7 @@ export const useStore = create((set, get) => ({
   ...createFormSlice(set, get),
   ...createUiSlice(set, get),
   ...createHistorySlice(set, get),
+  ...createPageOpsSlice(set, get),
 
   reset: () =>
     set({
@@ -28,12 +31,13 @@ export const useStore = create((set, get) => ({
       selectedOverlayId: null,
       pastHistory: [],
       futureHistory: [],
+      pageLayout: [],
     }),
 
   // Rehydrate a document from a saved autosave record. Unlike setDoc (which
   // always starts a document fresh), this restores the prior overlays/field
-  // values too — the pdfjs `doc` proxy itself can't be persisted, so it's
-  // re-derived from the saved raw bytes.
+  // values/page layout too — the pdfjs `doc` proxy itself can't be
+  // persisted, so it's re-derived from the saved raw bytes.
   restoreFromSession: async (session) => {
     const pdf = await loadPdf(session.arrayBuffer);
     const pages = await getPageSizes(pdf);
@@ -44,6 +48,7 @@ export const useStore = create((set, get) => ({
       pages,
       overlays: session.overlays ?? [],
       fieldValues: session.fieldValues ?? {},
+      pageLayout: session.pageLayout ?? defaultPageLayout(pages),
       recoverableSession: null,
       pastHistory: [],
       futureHistory: [],

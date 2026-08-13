@@ -15,7 +15,8 @@ export function useAutosave() {
       if (
         state.arrayBuffer === prev.arrayBuffer &&
         state.overlays === prev.overlays &&
-        state.fieldValues === prev.fieldValues
+        state.fieldValues === prev.fieldValues &&
+        state.pageLayout === prev.pageLayout
       ) return;
 
       clearTimeout(timer.current);
@@ -27,6 +28,7 @@ export function useAutosave() {
           arrayBuffer: s.arrayBuffer,
           overlays: s.overlays,
           fieldValues: s.fieldValues,
+          pageLayout: s.pageLayout,
         });
       }, DEBOUNCE_MS);
     });

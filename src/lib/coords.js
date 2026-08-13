@@ -34,3 +34,24 @@ export function pdfToScreen(rect, pageHeightPts, scale) {
   const y = (pageHeightPts - rect.y - rect.h) * scale;
   return { x, y, w, h };
 }
+
+/**
+ * Map a point measured within a page's ROTATED on-screen bounding box back
+ * to the equivalent point in the page's UNROTATED local space — the space
+ * screenToPdf/pdfToScreen (and all overlay/field math) work in. Used
+ * whenever the Page Manager has rotated a page: the field/overlay layer is
+ * still laid out and positioned in unrotated space, then visually rotated
+ * with a CSS transform, so pointer events need this inverse mapping.
+ * @param {number} x,y point relative to the rotated box's top-left, CSS px
+ * @param {number} w0,h0 the page's UNROTATED on-screen size (pts * scale)
+ * @param {number} rotation 0|90|180|270, clockwise — matches the CSS
+ *   rotate() applied to the layer
+ */
+export function unrotatePoint(x, y, w0, h0, rotation) {
+  switch (((rotation % 360) + 360) % 360) {
+    case 90:  return { x: y, y: h0 - x };
+    case 180: return { x: w0 - x, y: h0 - y };
+    case 270: return { x: w0 - y, y: x };
+    default:  return { x, y };
+  }
+}

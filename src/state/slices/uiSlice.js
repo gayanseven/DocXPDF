@@ -4,13 +4,25 @@ function getInitialTheme() {
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+function getInitialPanelOpen() {
+  return localStorage.getItem('pdfeditor.thumbnailPanelOpen') === 'true';
+}
+
 export const createUiSlice = (set, get) => ({
   toasts: [],
   theme: getInitialTheme(),
   loading: false,
   recoverableSession: null,
+  thumbnailPanelOpen: getInitialPanelOpen(),
 
   setLoading: (loading) => set({ loading }),
+
+  toggleThumbnailPanel: () =>
+    set((s) => {
+      const next = !s.thumbnailPanelOpen;
+      localStorage.setItem('pdfeditor.thumbnailPanelOpen', String(next));
+      return { thumbnailPanelOpen: next };
+    }),
 
   setTheme: (theme) => {
     localStorage.setItem('pdfeditor.theme', theme);

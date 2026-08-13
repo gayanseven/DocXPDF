@@ -3,7 +3,7 @@ import { useStore } from '../state/store.js';
 import { getAnnotations } from '../lib/pdfRender.js';
 import { pdfToScreen } from '../lib/coords.js';
 
-export default function FormFieldLayer({ pageNumber }) {
+export default function FormFieldLayer({ pageNumber, rotation = 0 }) {
   const doc = useStore((s) => s.doc);
   const zoom = useStore((s) => s.zoom);
   const pages = useStore((s) => s.pages);
@@ -31,8 +31,19 @@ export default function FormFieldLayer({ pageNumber }) {
 
   if (!pageInfo || annotations.length === 0) return null;
 
+  // Fields are laid out in the page's UNROTATED coordinate space, then the
+  // whole layer is rotated to match a Page-Manager rotation — see
+  // lib/coords.js's unrotatePoint for why this is the paired approach.
+  const layerStyle = rotation
+    ? {
+        position: 'absolute', top: '50%', left: '50%', right: 'auto', bottom: 'auto',
+        width: pageInfo.width * zoom, height: pageInfo.height * zoom,
+        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+      }
+    : undefined;
+
   return (
-    <div className="field-layer">
+    <div className="field-layer" style={layerStyle}>
       {annotations.map((ann, i) => {
         const [x1, y1, x2, y2] = ann.rect;
         const s = pdfToScreen({ x: x1, y: y1, w: x2 - x1, h: y2 - y1 }, pageInfo.height, zoom);

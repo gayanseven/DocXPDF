@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { AlignLeft, AlignCenter, AlignRight, X } from 'lucide-react';
 import { useStore } from '../state/store.js';
-import { pdfToScreen, screenToPdf } from '../lib/coords.js';
+import { pdfToScreen, screenToPdf, unrotatePoint } from '../lib/coords.js';
 
 const FONT_SIZES = { xs: 10, sm: 12, md: 14, lg: 16, xl: 22 };
 
@@ -11,7 +11,7 @@ const ALIGNMENTS = [
   { id: 'right',  icon: <AlignRight size={14} strokeWidth={1.75} /> },
 ];
 
-export default function OverlayLayer({ pageNumber }) {
+export default function OverlayLayer({ pageNumber, rotation = 0 }) {
   const layerRef = useRef(null);
   const justAddedId = useRef(null);
   const textEditBefore = useRef(null);
@@ -85,14 +85,21 @@ export default function OverlayLayer({ pageNumber }) {
 
   if (!pageInfo) return null;
 
+  // The layer is laid out in the page's UNROTATED space then visually
+  // rotated with a CSS transform (see the style below) when a Page-Manager
+  // rotation is applied — so pointer positions read off the (now rotated)
+  // bounding box must be mapped back with unrotatePoint before any
+  // screenToPdf call, or clicks/drags land in the wrong place.
+  const w0 = pageInfo.width * zoom;
+  const h0 = pageInfo.height * zoom;
+
   // ── click background to add ────────────────────────────────────────────────
   function handleBackgroundClick(e) {
     if (activeTool !== 'text' && activeTool !== 'signature') return;
     if (e.target !== layerRef.current) return;
 
     const rect = layerRef.current.getBoundingClientRect();
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
+    const { x: sx, y: sy } = unrotatePoint(e.clientX - rect.left, e.clientY - rect.top, w0, h0, rotation);
 
     if (activeTool === 'text') {
       const p = screenToPdf({ x: sx, y: sy, w: 160, h: 32 }, pageInfo.height, zoom);
@@ -114,15 +121,17 @@ export default function OverlayLayer({ pageNumber }) {
     e.preventDefault();
     e.stopPropagation();
     setSelectedOverlay(overlay.id);
-    const sx = e.clientX, sy = e.clientY;
+    const rect = layerRef.current.getBoundingClientRect();
+    const start = unrotatePoint(e.clientX - rect.left, e.clientY - rect.top, w0, h0, rotation);
     const ox = overlay.x, oy = overlay.y;
     const z = zoom;
     const before = useStore.getState().overlays;
 
     function onMove(ev) {
+      const cur = unrotatePoint(ev.clientX - rect.left, ev.clientY - rect.top, w0, h0, rotation);
       updateOverlay(overlay.id, {
-        x: ox + (ev.clientX - sx) / z,
-        y: oy - (ev.clientY - sy) / z,
+        x: ox + (cur.x - start.x) / z,
+        y: oy - (cur.y - start.y) / z,
       });
     }
     function onUp() {
@@ -138,15 +147,17 @@ export default function OverlayLayer({ pageNumber }) {
   function startResize(e, overlay) {
     e.preventDefault();
     e.stopPropagation();
-    const sx = e.clientX, sy = e.clientY;
+    const rect = layerRef.current.getBoundingClientRect();
+    const start = unrotatePoint(e.clientX - rect.left, e.clientY - rect.top, w0, h0, rotation);
     const sw = overlay.w, sh = overlay.h, spy = overlay.y;
     const z = zoom;
     const ratio = sw / sh;
     const before = useStore.getState().overlays;
 
     function onMove(ev) {
-      const dw = (ev.clientX - sx) / z;
-      const dh = (ev.clientY - sy) / z;
+      const cur = unrotatePoint(ev.clientX - rect.left, ev.clientY - rect.top, w0, h0, rotation);
+      const dw = (cur.x - start.x) / z;
+      const dh = (cur.y - start.y) / z;
       if (overlay.type === 'signature') {
         const newW = Math.max(30, sw + dw);
         const newH = newW / ratio;
@@ -166,12 +177,19 @@ export default function OverlayLayer({ pageNumber }) {
   }
 
   const cursor = activeTool === 'text' ? 'text' : activeTool === 'signature' ? 'crosshair' : 'default';
+  const layerStyle = rotation
+    ? {
+        cursor, position: 'absolute', top: '50%', left: '50%', right: 'auto', bottom: 'auto',
+        width: w0, height: h0,
+        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+      }
+    : { cursor };
 
   return (
     <div
       ref={layerRef}
       className={`overlay-layer${isSelect ? '' : ' overlay-layer--active'}`}
-      style={{ cursor }}
+      style={layerStyle}
       onClick={handleBackgroundClick}
     >
       {pageOverlays.map((overlay) => {
