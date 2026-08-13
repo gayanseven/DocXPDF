@@ -10,6 +10,8 @@ import AnnotateToolbar from './components/AnnotateToolbar.jsx';
 import PdfViewer from './components/PdfViewer.jsx';
 import EmptyState from './components/EmptyState.jsx';
 import SignatureModal from './components/SignatureModal.jsx';
+import WatermarkModal from './components/WatermarkModal.jsx';
+import PageNumbersModal from './components/PageNumbersModal.jsx';
 import RecoveryBanner from './components/RecoveryBanner.jsx';
 import Toast from './components/Toast.jsx';
 
@@ -18,6 +20,8 @@ export default function App() {
   const theme = useStore((s) => s.theme);
   const thumbnailPanelOpen = useStore((s) => s.thumbnailPanelOpen);
   const activeTool = useStore((s) => s.activeTool);
+  const activeModal = useStore((s) => s.activeModal);
+  const setActiveModal = useStore((s) => s.setActiveModal);
   const pendingSignature = useStore((s) => s.pendingSignature);
   const addOverlay = useStore((s) => s.addOverlay);
   const setPendingSignature = useStore((s) => s.setPendingSignature);
@@ -62,6 +66,8 @@ export default function App() {
           onCancel={() => setPendingSignature(null)}
         />
       )}
+      {activeModal === 'watermark' && <WatermarkModal onClose={() => setActiveModal(null)} />}
+      {activeModal === 'pageNumbers' && <PageNumbersModal onClose={() => setActiveModal(null)} />}
       <Toast />
     </div>
   );

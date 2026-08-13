@@ -4,6 +4,7 @@ import { useStore } from '../state/store.js';
 import { exportPdf } from '../lib/exportPdf.js';
 import { loadPdfFile } from '../lib/loadFile.js';
 import { clearSession } from '../lib/persistence.js';
+import ToolsMenu from './ToolsMenu.jsx';
 
 export default function Toolbar() {
   const inputRef = useRef(null);
@@ -25,7 +26,14 @@ export default function Toolbar() {
     const s = useStore.getState();
     setExporting(true);
     try {
-      const bytes = await exportPdf(s.arrayBuffer, s.fieldValues, s.overlays, s.pageLayout, s.annotations);
+      const bytes = await exportPdf(s.arrayBuffer, {
+        fieldValues: s.fieldValues,
+        overlays: s.overlays,
+        pageLayout: s.pageLayout,
+        annotations: s.annotations,
+        watermarkConfig: s.watermarkConfig,
+        pageNumbersConfig: s.pageNumbersConfig,
+      });
       const blob = new Blob([bytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -110,6 +118,8 @@ export default function Toolbar() {
             {exporting ? <Loader2 size={14} className="spin" /> : <Download size={14} strokeWidth={2} />}
             {exporting ? 'Exporting…' : 'Export'}
           </button>
+
+          <ToolsMenu />
 
           <div className="header-divider" />
         </>

@@ -65,6 +65,54 @@
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* ── Tools dropdown menu ────────────────────────────────────────────────── */
+.tools-menu { position: relative; }
+.tools-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 170px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 4px;
+  z-index: var(--z-modal);
+  animation: modal-in var(--duration-fast) var(--ease-standard) both;
+}
+.tools-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--duration-fast);
+}
+.tools-menu-item:hover { background: var(--surface-hover); }
+
+/* ── Labeled form rows (used in Watermark/Page-numbers/etc. modals) ─────── */
+.field-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.field-row label { font-size: var(--text-base); color: var(--text-secondary); flex-shrink: 0; }
+.field-row-control { flex: 1 1 auto; max-width: 220px; display: flex; justify-content: flex-end; gap: 6px; }
+.field-row select.field-row-control,
+.field-row input[type="number"].field-row-control { display: block; }
+.field-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-strong);
+  cursor: pointer;
+  padding: 0;
+}
+.field-swatch--active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-subtle); }
+
 /* ── Modal (shared chrome — backdrop/header/tabs/body/actions) ──────────── */
 .modal-backdrop {
   position: fixed;

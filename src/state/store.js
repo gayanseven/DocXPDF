@@ -10,6 +10,7 @@ import { createHistorySlice } from './slices/historySlice.js';
 import { createPageOpsSlice } from './slices/pageOpsSlice.js';
 import { createSignatureLibrarySlice } from './slices/signatureLibrarySlice.js';
 import { createAnnotationSlice } from './slices/annotationSlice.js';
+import { createBatchToolsSlice } from './slices/batchToolsSlice.js';
 
 export const useStore = create((set, get) => ({
   ...createDocumentSlice(set, get),
@@ -21,6 +22,7 @@ export const useStore = create((set, get) => ({
   ...createPageOpsSlice(set, get),
   ...createSignatureLibrarySlice(set, get),
   ...createAnnotationSlice(set, get),
+  ...createBatchToolsSlice(set, get),
 
   reset: () =>
     set({

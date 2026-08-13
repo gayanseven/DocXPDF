@@ -146,6 +146,71 @@ function isIdentityLayout(pageLayout, pageCount) {
   return pageLayout.every((item, i) => !item.isBlank && item.rotation === 0 && item.sourcePage === i + 1);
 }
 
+async function applyWatermark(pdfDoc, config) {
+  if (!config) return;
+  const pages = pdfDoc.getPages();
+
+  if (config.type === 'text' && config.text) {
+    const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const color = hexToRgb(config.color) ?? rgb(0.5, 0.5, 0.5);
+    const size = config.fontSize ?? 48;
+    const textWidth = font.widthOfTextAtSize(config.text, size);
+    for (const page of pages) {
+      const { width, height } = page.getSize();
+      page.drawText(config.text, {
+        x: width / 2 - textWidth / 2,
+        y: height / 2,
+        size, font, color,
+        opacity: config.opacity ?? 0.2,
+        rotate: degrees(config.rotation ?? 45),
+      });
+    }
+    return;
+  }
+
+  if (config.type === 'image' && config.dataUrl) {
+    const base64 = config.dataUrl.split(',')[1];
+    const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    let img;
+    try { img = await pdfDoc.embedPng(bytes); } catch { img = await pdfDoc.embedJpg(bytes); }
+    for (const page of pages) {
+      const { width, height } = page.getSize();
+      const w = Math.min(width * 0.5, img.width);
+      const h = w * (img.height / img.width);
+      page.drawImage(img, { x: width / 2 - w / 2, y: height / 2 - h / 2, width: w, height: h, opacity: config.opacity ?? 0.3 });
+    }
+  }
+}
+
+function formatPageNumber(format, n, total) {
+  switch (format) {
+    case 'n_of_total': return `${n} / ${total}`;
+    case 'page_n': return `Page ${n}`;
+    case 'page_n_of_total': return `Page ${n} of ${total}`;
+    default: return `${n}`;
+  }
+}
+
+async function applyPageNumbers(pdfDoc, config) {
+  if (!config) return;
+  const pages = pdfDoc.getPages();
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const color = hexToRgb(config.color) ?? rgb(0.4, 0.4, 0.44);
+  const size = config.fontSize ?? 10;
+  const margin = 28;
+  const [vPos, hPos] = (config.position ?? 'bottom-center').split('-');
+
+  pages.forEach((page, idx) => {
+    const { width, height } = page.getSize();
+    const n = (config.startAt ?? 1) + idx;
+    const text = formatPageNumber(config.format, n, pages.length);
+    const textWidth = font.widthOfTextAtSize(text, size);
+    const x = hPos === 'left' ? margin : hPos === 'right' ? width - margin - textWidth : width / 2 - textWidth / 2;
+    const y = vPos === 'top' ? height - margin : margin;
+    page.drawText(text, { x, y, size, font, color });
+  });
+}
+
 /**
  * Export the edited PDF. When the page layout hasn't been touched (no
  * reorder/rotate/insert/delete/duplicate), this fills the form and draws
@@ -157,7 +222,8 @@ function isIdentityLayout(pageLayout, pageCount) {
  * page-level restructuring, consistent with how most PDF tools behave once
  * you start recomposing pages.
  */
-export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout, annotations = []) {
+export async function exportPdf(arrayBuffer, opts = {}) {
+  const { fieldValues = {}, overlays = [], pageLayout, annotations = [], watermarkConfig = null, pageNumbersConfig = null } = opts;
   const srcDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
   const pageCount = srcDoc.getPageCount();
 
@@ -173,6 +239,8 @@ export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout, 
       const page = pages[annotation.page - 1];
       if (page) drawAnnotation(page, annotation);
     }
+    await applyWatermark(srcDoc, watermarkConfig);
+    await applyPageNumbers(srcDoc, pageNumbersConfig);
     return srcDoc.save();
   }
 
@@ -212,5 +280,7 @@ export async function exportPdf(arrayBuffer, fieldValues, overlays, pageLayout, 
     }
   }
 
+  await applyWatermark(outDoc, watermarkConfig);
+  await applyPageNumbers(outDoc, pageNumbersConfig);
   return outDoc.save();
 }
