@@ -29,16 +29,6 @@ const TOOLS = [
       </svg>
     ),
   },
-  {
-    id: 'checkbox',
-    tooltip: 'Add Checkbox',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.4"/>
-        <path d="M5 8l2.5 2.5L11 5.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
 ];
 
 export default function Sidebar() {
