@@ -28,10 +28,10 @@ export default function PageManagerPanel() {
             aria-label="Insert blank page"
             onClick={() => insertBlankPageItem(pageLayout[pageLayout.length - 1]?.id)}
           >
-            <FilePlus2 size={15} strokeWidth={1.75} />
+            <FilePlus2 size={18} strokeWidth={1.75} />
           </button>
           <button className="header-btn-icon" title="Hide panel" aria-label="Hide pages panel" onClick={toggleThumbnailPanel}>
-            <X size={15} strokeWidth={1.75} />
+            <X size={18} strokeWidth={1.75} />
           </button>
         </div>
       </div>

@@ -29,6 +29,8 @@ export default function App() {
   const pendingSignature = useStore((s) => s.pendingSignature);
   const addOverlay = useStore((s) => s.addOverlay);
   const setPendingSignature = useStore((s) => s.setPendingSignature);
+  const setSelectedOverlay = useStore((s) => s.setSelectedOverlay);
+  const setActiveTool = useStore((s) => s.setActiveTool);
   const addToast = useStore((s) => s.addToast);
 
   useEffect(() => {
@@ -41,15 +43,29 @@ export default function App() {
 
   function handleSignaturePlace(dataUrl) {
     const p = pendingSignature;
-    addOverlay({
-      id: crypto.randomUUID(),
-      page: p.page,
-      type: 'signature',
-      x: p.x, y: p.y, w: p.w, h: p.h,
-      dataUrl,
-    });
-    setPendingSignature(null);
-    addToast({ type: 'success', message: 'Signature placed' });
+    const img = new Image();
+    img.onload = () => {
+      // Keep the click-target width but derive height from the signature's
+      // own aspect ratio, so it isn't stretched to the fixed placement box.
+      const aspect = img.naturalWidth / img.naturalHeight || 1;
+      const w = p.w;
+      const h = w / aspect;
+      const id = crypto.randomUUID();
+      addOverlay({
+        id,
+        page: p.page,
+        type: 'signature',
+        x: p.x, y: p.y + (p.h - h), w, h,
+        dataUrl,
+      });
+      setPendingSignature(null);
+      // Drop into select mode with the new signature selected so its resize
+      // handle is immediately visible/usable.
+      setActiveTool('select');
+      setSelectedOverlay(id);
+      addToast({ type: 'success', message: 'Signature placed' });
+    };
+    img.src = dataUrl;
   }
 
   return (

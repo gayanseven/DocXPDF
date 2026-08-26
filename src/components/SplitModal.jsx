@@ -69,7 +69,7 @@ export default function SplitModal({ onClose }) {
         <div className="modal-header">
           <h3 className="modal-title">Split / Extract Pages</h3>
           <button className="modal-close" onClick={onClose} aria-label="Close">
-            <X size={16} strokeWidth={1.75} />
+            <X size={19} strokeWidth={1.75} />
           </button>
         </div>
         <div className="modal-body">

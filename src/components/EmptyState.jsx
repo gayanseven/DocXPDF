@@ -27,12 +27,12 @@ export default function EmptyState() {
       onDrop={onDrop}
     >
       <div className="empty-icon">
-        <FileText size={44} strokeWidth={1.4} />
+        <FileText size={53} strokeWidth={1.4} />
       </div>
       <h1>Start editing a PDF</h1>
       <p>Drop a file here, or choose one below. Everything happens in your browser — nothing is uploaded anywhere.</p>
       <button className="empty-cta" onClick={() => inputRef.current?.click()}>
-        <UploadCloud size={17} strokeWidth={2} />
+        <UploadCloud size={20} strokeWidth={2} />
         Choose a PDF
       </button>
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={onFile} />

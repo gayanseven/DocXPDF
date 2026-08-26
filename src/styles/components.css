@@ -3,14 +3,14 @@
 .has-tooltip::after {
   content: attr(data-tooltip);
   position: absolute;
-  left: calc(100% + 10px);
+  left: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%);
   background: var(--chrome-dark-bg);
   color: var(--chrome-dark-text);
   font-size: var(--text-xs);
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: var(--radius-sm);
   white-space: nowrap;
   pointer-events: none;
@@ -21,10 +21,10 @@
 .has-tooltip::before {
   content: '';
   position: absolute;
-  left: calc(100% + 4px);
+  left: calc(100% + 5px);
   top: 50%;
   transform: translateY(-50%);
-  border: 5px solid transparent;
+  border: 6px solid transparent;
   border-right-color: var(--chrome-dark-bg);
   pointer-events: none;
   opacity: 0;
@@ -35,7 +35,7 @@
 
 /* ── Buttons (shared primitives used across modals/panels) ─────────────── */
 .btn-ghost {
-  padding: 7px 14px;
+  padding: 8px 17px;
   font-size: var(--text-base);
   font-weight: 500;
   background: transparent;
@@ -51,8 +51,8 @@
 .btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
+  gap: 7px;
+  padding: 8px 19px;
   font-size: var(--text-base);
   font-weight: 600;
   background: var(--accent);
@@ -71,7 +71,7 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  min-width: 170px;
+  min-width: 204px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -104,8 +104,8 @@
 .field-row select.field-row-control,
 .field-row input[type="number"].field-row-control { display: block; }
 .field-swatch {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--radius-full);
   border: 1.5px solid var(--border-strong);
   cursor: pointer;
@@ -128,15 +128,15 @@
 .modal {
   background: var(--surface-raised);
   border-radius: var(--radius-lg);
-  width: 560px;
-  max-width: calc(100vw - 32px);
+  width: 672px;
+  max-width: calc(100vw - 38px);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   animation: modal-in var(--duration-base) var(--ease-standard) both;
 }
-.modal--wide { width: 720px; }
+.modal--wide { width: 864px; }
 .modal--wide .modal-body { max-height: 60vh; overflow-y: auto; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modal-in {
@@ -155,8 +155,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border: none;
   background: transparent;
   color: var(--text-muted);
@@ -213,8 +213,8 @@
   box-shadow: var(--shadow-lg);
   font-size: var(--text-base);
   font-weight: 500;
-  min-width: 240px;
-  max-width: 360px;
+  min-width: 288px;
+  max-width: 432px;
   pointer-events: all;
   animation: toast-in var(--duration-base) cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
@@ -232,13 +232,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 0;
   transition: color var(--duration-fast), background var(--duration-fast);
 }
@@ -253,16 +253,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
   font-family: inherit;
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-primary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-strong);
-  border-radius: 5px;
+  border-radius: 6px;
   box-shadow: 0 1px 0 var(--border-strong);
 }
 

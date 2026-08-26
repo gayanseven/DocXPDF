@@ -22,24 +22,24 @@ export default function ToolsMenu() {
   return (
     <div className="tools-menu" ref={ref}>
       <button className="header-btn-icon" onClick={() => setOpen((o) => !o)} aria-label="More tools" title="More tools">
-        <MoreHorizontal size={16} strokeWidth={1.75} />
+        <MoreHorizontal size={19} strokeWidth={1.75} />
       </button>
       {open && (
         <div className="tools-menu-dropdown">
           <button className="tools-menu-item" onClick={() => openModal('watermark')}>
-            <Stamp size={15} strokeWidth={1.75} /> Watermark
+            <Stamp size={18} strokeWidth={1.75} /> Watermark
           </button>
           <button className="tools-menu-item" onClick={() => openModal('pageNumbers')}>
-            <Hash size={15} strokeWidth={1.75} /> Page numbers
+            <Hash size={18} strokeWidth={1.75} /> Page numbers
           </button>
           <button className="tools-menu-item" onClick={() => openModal('merge')}>
-            <Combine size={15} strokeWidth={1.75} /> Merge PDFs
+            <Combine size={18} strokeWidth={1.75} /> Merge PDFs
           </button>
           <button className="tools-menu-item" onClick={() => openModal('split')}>
-            <Scissors size={15} strokeWidth={1.75} /> Split / Extract
+            <Scissors size={18} strokeWidth={1.75} /> Split / Extract
           </button>
           <button className="tools-menu-item" onClick={() => openModal('compress')}>
-            <Shrink size={15} strokeWidth={1.75} /> Compress
+            <Shrink size={18} strokeWidth={1.75} /> Compress
           </button>
         </div>
       )}

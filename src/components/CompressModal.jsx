@@ -63,12 +63,12 @@ export default function CompressModal({ onClose }) {
         <div className="modal-header">
           <h3 className="modal-title">Compress PDF</h3>
           <button className="modal-close" onClick={onClose} aria-label="Close">
-            <X size={16} strokeWidth={1.75} />
+            <X size={19} strokeWidth={1.75} />
           </button>
         </div>
         <div className="modal-body">
           <div className="compress-warning">
-            <AlertTriangle size={16} strokeWidth={1.75} />
+            <AlertTriangle size={19} strokeWidth={1.75} />
             <span>This flattens your PDF into images to shrink it. Text will no longer be selectable or searchable, and fillable form fields become static. Best for documents you're finished editing.</span>
           </div>
 

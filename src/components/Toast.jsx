@@ -15,10 +15,10 @@ export default function Toast() {
         const Icon = ICONS[t.type] ?? Info;
         return (
           <div key={t.id} className={`toast toast--${t.type}`}>
-            <span className="toast-icon"><Icon size={16} strokeWidth={1.75} /></span>
+            <span className="toast-icon"><Icon size={19} strokeWidth={1.75} /></span>
             <span className="toast-msg">{t.message}</span>
             <button className="toast-close" onClick={() => removeToast(t.id)} aria-label="Dismiss">
-              <X size={12} strokeWidth={2} />
+              <X size={14} strokeWidth={2} />
             </button>
           </div>
         );

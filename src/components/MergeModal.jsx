@@ -71,7 +71,7 @@ export default function MergeModal({ onClose }) {
         <div className="modal-header">
           <h3 className="modal-title">Merge PDFs</h3>
           <button className="modal-close" onClick={onClose} aria-label="Close">
-            <X size={16} strokeWidth={1.75} />
+            <X size={19} strokeWidth={1.75} />
           </button>
         </div>
         <div className="modal-body">
@@ -87,16 +87,16 @@ export default function MergeModal({ onClose }) {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => onDrop(i)}
               >
-                <GripVertical size={14} strokeWidth={1.75} />
+                <GripVertical size={17} strokeWidth={1.75} />
                 <span className="merge-queue-name">{f.name}</span>
                 <button className="merge-queue-remove" onClick={() => removeFile(f.id)} aria-label="Remove">
-                  <X size={12} strokeWidth={2} />
+                  <X size={14} strokeWidth={2} />
                 </button>
               </div>
             ))}
           </div>
           <button className="btn-ghost merge-add-btn" onClick={() => inputRef.current?.click()}>
-            <FilePlus2 size={14} strokeWidth={1.75} />
+            <FilePlus2 size={17} strokeWidth={1.75} />
             Add PDFs
           </button>
           <input ref={inputRef} type="file" accept="application/pdf" multiple hidden onChange={onFilePick} />

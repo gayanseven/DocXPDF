@@ -22,7 +22,7 @@ export default function Sidebar() {
             aria-pressed={thumbnailPanelOpen}
             disabled={!doc}
           >
-            <Layers size={18} strokeWidth={1.75} />
+            <Layers size={22} strokeWidth={1.75} />
           </button>
         </div>
         <div className="sidebar-sep" />
@@ -35,7 +35,7 @@ export default function Sidebar() {
               aria-pressed={activeTool === id}
               disabled={!doc}
             >
-              <Icon size={18} strokeWidth={1.75} />
+              <Icon size={22} strokeWidth={1.75} />
             </button>
           </div>
         ))}

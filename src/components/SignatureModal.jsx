@@ -14,7 +14,7 @@ export default function SignatureModal({ onPlace, onCancel }) {
         <div className="modal-header">
           <h3 className="modal-title">Add Signature</h3>
           <button className="modal-close" onClick={onCancel} aria-label="Close">
-            <X size={16} strokeWidth={1.75} />
+            <X size={19} strokeWidth={1.75} />
           </button>
         </div>
 
@@ -127,7 +127,7 @@ function DrawTab({ onPlace, onCancel }) {
       </div>
       <div className="modal-actions">
         <button className="btn-ghost" onClick={clear}>Clear</button>
-        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 19 }}>
           <SaveToggle checked={save} onChange={setSave} />
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
           <button className="btn-primary" onClick={place} disabled={!hasStroke}>Place</button>
@@ -173,14 +173,14 @@ function TypeTab({ onPlace, onCancel }) {
       />
       {text.trim() && (
         <div className="sig-type-preview">
-          <span style={{ fontFamily: '"Dancing Script", "Brush Script MT", cursive', fontSize: 40 }}>
+          <span style={{ fontFamily: '"Dancing Script", "Brush Script MT", cursive', fontSize: 48 }}>
             {text}
           </span>
         </div>
       )}
       <div className="modal-actions">
         <div />
-        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 19 }}>
           <SaveToggle checked={save} onChange={setSave} />
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
           <button className="btn-primary" onClick={place} disabled={!text.trim()}>Place</button>
@@ -245,7 +245,7 @@ function UploadTab({ onPlace, onCancel }) {
       <p className="sig-hint">Upload a PNG or JPG image of your signature</p>
       {!dataUrl ? (
         <div className="sig-upload-zone" onClick={() => inputRef.current?.click()}>
-          <UploadCloud size={30} strokeWidth={1.5} />
+          <UploadCloud size={36} strokeWidth={1.5} />
           <span>Click to choose an image</span>
           <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={onFile} />
         </div>
@@ -260,7 +260,7 @@ function UploadTab({ onPlace, onCancel }) {
       )}
       <div className="modal-actions">
         <div />
-        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 16 }}>
+        <div className="modal-actions-right" style={{ alignItems: 'center', gap: 19 }}>
           <SaveToggle checked={save} onChange={setSave} />
           <button className="btn-ghost" onClick={onCancel}>Cancel</button>
           <button className="btn-primary" onClick={place} disabled={!dataUrl}>Place</button>
@@ -302,7 +302,7 @@ function SavedTab({ onPlace, onCancel }) {
               title="Delete"
               aria-label="Delete saved signature"
             >
-              <Trash2 size={10} strokeWidth={2} />
+              <Trash2 size={12} strokeWidth={2} />
             </button>
           </div>
         ))}

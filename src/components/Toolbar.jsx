@@ -60,8 +60,8 @@ export default function Toolbar() {
     <header className="header">
       {/* Brand / open */}
       <button className="header-brand" onClick={() => inputRef.current?.click()} title="Open PDF" disabled={loading}>
-        {loading ? <Loader2 size={18} className="spin" /> : <FolderOpen size={18} strokeWidth={1.75} />}
-        <span className="header-brand-text">PDF Editor</span>
+        {loading ? <Loader2 size={22} className="spin" /> : <FolderOpen size={22} strokeWidth={1.75} />}
+        <span className="header-brand-text">Docx PDF</span>
       </button>
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={onFile} />
 
@@ -77,10 +77,10 @@ export default function Toolbar() {
 
           {/* Undo / redo */}
           <button className="header-btn-icon" onClick={undo} disabled={pastHistory.length === 0} aria-label="Undo" title="Undo (Ctrl+Z)">
-            <Undo2 size={16} strokeWidth={1.75} />
+            <Undo2 size={19} strokeWidth={1.75} />
           </button>
           <button className="header-btn-icon" onClick={redo} disabled={futureHistory.length === 0} aria-label="Redo" title="Redo (Ctrl+Shift+Z)">
-            <Redo2 size={16} strokeWidth={1.75} />
+            <Redo2 size={19} strokeWidth={1.75} />
           </button>
         </>
       )}
@@ -94,7 +94,7 @@ export default function Toolbar() {
           aria-label="Clear all form fields"
           title="Clear all form fields"
         >
-          <Eraser size={16} strokeWidth={1.75} />
+          <Eraser size={19} strokeWidth={1.75} />
         </button>
       )}
 
@@ -103,11 +103,11 @@ export default function Toolbar() {
           {/* Zoom */}
           <div className="header-zoom">
             <button className="header-zoom-btn" onClick={() => setZoom(zoom - 0.15)} aria-label="Zoom out">
-              <Minus size={13} strokeWidth={2} />
+              <Minus size={16} strokeWidth={2} />
             </button>
             <span className="header-zoom-val">{Math.round(zoom * 100)}%</span>
             <button className="header-zoom-btn" onClick={() => setZoom(zoom + 0.15)} aria-label="Zoom in">
-              <Plus size={13} strokeWidth={2} />
+              <Plus size={16} strokeWidth={2} />
             </button>
           </div>
 
@@ -115,7 +115,7 @@ export default function Toolbar() {
 
           {/* Export */}
           <button className="header-btn-export" onClick={onExport} disabled={exporting}>
-            {exporting ? <Loader2 size={14} className="spin" /> : <Download size={14} strokeWidth={2} />}
+            {exporting ? <Loader2 size={17} className="spin" /> : <Download size={17} strokeWidth={2} />}
             {exporting ? 'Exporting…' : 'Export'}
           </button>
 
@@ -127,18 +127,18 @@ export default function Toolbar() {
 
       {doc && (
         <button className="header-btn-icon" onClick={() => setActiveModal('shortcuts')} aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
-          <HelpCircle size={16} strokeWidth={1.75} />
+          <HelpCircle size={19} strokeWidth={1.75} />
         </button>
       )}
 
       {/* Theme toggle */}
       <button className="header-btn-icon" onClick={toggleTheme} aria-label="Toggle theme" title="Toggle theme">
-        {theme === 'dark' ? <Sun size={16} strokeWidth={1.75} /> : <Moon size={16} strokeWidth={1.75} />}
+        {theme === 'dark' ? <Sun size={19} strokeWidth={1.75} /> : <Moon size={19} strokeWidth={1.75} />}
       </button>
 
       {doc && (
         <button className="header-btn-close" onClick={onClose} aria-label="Close document" title="Close document">
-          <X size={16} strokeWidth={2} />
+          <X size={19} strokeWidth={2} />
         </button>
       )}
     </header>

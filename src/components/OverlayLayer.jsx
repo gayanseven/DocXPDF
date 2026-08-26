@@ -13,9 +13,9 @@ const FONT_FAMILIES = [
 ];
 
 const ALIGNMENTS = [
-  { id: 'left',   icon: <AlignLeft size={14} strokeWidth={1.75} /> },
-  { id: 'center', icon: <AlignCenter size={14} strokeWidth={1.75} /> },
-  { id: 'right',  icon: <AlignRight size={14} strokeWidth={1.75} /> },
+  { id: 'left',   icon: <AlignLeft size={17} strokeWidth={1.75} /> },
+  { id: 'center', icon: <AlignCenter size={17} strokeWidth={1.75} /> },
+  { id: 'right',  icon: <AlignRight size={17} strokeWidth={1.75} /> },
 ];
 
 export default function OverlayLayer({ pageNumber, rotation = 0 }) {
@@ -342,7 +342,7 @@ export default function OverlayLayer({ pageNumber, rotation = 0 }) {
                   title="Remove"
                   aria-label="Remove overlay"
                 >
-                  <X size={10} strokeWidth={2} />
+                  <X size={12} strokeWidth={2} />
                 </button>
               </>
             )}

@@ -34,7 +34,7 @@
   letter-spacing: -0.01em;
 }
 
-.header-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.header-divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
 
 .header-file {
   display: flex;
@@ -53,7 +53,7 @@
   max-width: 260px;
 }
 .header-badge {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -80,9 +80,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
+  width: 29px;
+  height: 29px;
+  border-radius: 6px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
@@ -94,7 +94,7 @@
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-secondary);
-  min-width: 38px;
+  min-width: 46px;
   text-align: center;
 }
 
@@ -102,8 +102,8 @@
 .header-btn-export {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 32px;
+  gap: 7px;
+  height: 38px;
   padding: 0 var(--space-4);
   border-radius: var(--radius-sm);
   border: none;
@@ -124,8 +124,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-sm);
   border: none;
   background: transparent;
@@ -140,8 +140,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-sm);
   border: none;
   background: transparent;
@@ -186,8 +186,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-sm);
   border: none;
   background: transparent;
@@ -200,12 +200,12 @@
 .sidebar-btn--active { background: var(--accent-subtle); color: var(--accent); }
 .sidebar-btn--active:hover:not(:disabled) { background: var(--accent-subtle); }
 
-.sidebar-sep { width: 28px; height: 1px; background: var(--border); margin: var(--space-1) 0; flex-shrink: 0; }
+.sidebar-sep { width: 34px; height: 1px; background: var(--border); margin: var(--space-1) 0; flex-shrink: 0; }
 
 /* ── Page manager panel ─────────────────────────────────────────────────── */
 .page-panel {
-  width: 200px;
-  flex: 0 0 200px;
+  width: 240px;
+  flex: 0 0 240px;
   background: var(--surface-panel);
   border-right: 1px solid var(--border);
   display: flex;
@@ -222,7 +222,7 @@
 }
 .page-panel-title { font-size: var(--text-sm); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
 .page-panel-header-actions { display: flex; gap: 2px; }
-.page-panel-header-actions .header-btn-icon { width: 26px; height: 26px; }
+.page-panel-header-actions .header-btn-icon { width: 31px; height: 31px; }
 .page-panel-list {
   flex: 1 1 auto;
   overflow-y: auto;
@@ -238,6 +238,7 @@
   cursor: grab;
   transition: border-color var(--duration-fast), opacity var(--duration-fast);
   overflow: hidden;
+  flex-shrink: 0;
 }
 .page-thumb:hover { border-color: var(--border-strong); }
 .page-thumb--dragging { opacity: 0.4; }
@@ -246,7 +247,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
+  min-height: 72px;
   padding: var(--space-2);
   background: var(--surface-sunken);
 }
@@ -262,8 +263,8 @@
 }
 .page-thumb-drag {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 5px;
+  left: 5px;
   color: var(--text-muted);
   opacity: 0;
   transition: opacity var(--duration-fast);
@@ -283,12 +284,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border: none;
   background: transparent;
   color: var(--text-muted);
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background var(--duration-fast), color var(--duration-fast);
 }
@@ -308,7 +309,7 @@
 .page-layers {
   position: relative;
   box-shadow: var(--shadow-md);
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
   background: #fff; /* pages render as physical white paper regardless of app theme */
 }
@@ -347,7 +348,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 12px 28px;
+  padding: 14px 34px;
   background: var(--accent);
   color: var(--text-on-accent);
   border: none;

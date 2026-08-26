@@ -31,7 +31,7 @@ export default function AnnotateToolbar() {
             aria-label={label}
             aria-pressed={annotateSubTool === id}
           >
-            <Icon size={15} strokeWidth={1.75} />
+            <Icon size={18} strokeWidth={1.75} />
           </button>
         ))}
       </div>

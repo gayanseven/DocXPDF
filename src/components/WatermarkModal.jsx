@@ -49,7 +49,7 @@ export default function WatermarkModal({ onClose }) {
         <div className="modal-header">
           <h3 className="modal-title">Watermark</h3>
           <button className="modal-close" onClick={onClose} aria-label="Close">
-            <X size={16} strokeWidth={1.75} />
+            <X size={19} strokeWidth={1.75} />
           </button>
         </div>
 
@@ -92,7 +92,7 @@ export default function WatermarkModal({ onClose }) {
             <>
               {!dataUrl ? (
                 <div className="sig-upload-zone" onClick={() => document.getElementById('wm-file-input').click()}>
-                  <UploadCloud size={30} strokeWidth={1.5} />
+                  <UploadCloud size={36} strokeWidth={1.5} />
                   <span>Click to choose a logo image</span>
                 </div>
               ) : (
