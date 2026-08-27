@@ -278,7 +278,7 @@ function SavedTab({ onPlace, onCancel }) {
   if (savedSignatures.length === 0) {
     return (
       <>
-        <p className="sig-hint">No saved signatures yet — draw, type, or upload one and check "Save for reuse."</p>
+        <p className="sig-hint">No saved signatures yet. Draw, type, or upload one and check "Save for reuse."</p>
         <div className="modal-actions">
           <div />
           <div className="modal-actions-right">

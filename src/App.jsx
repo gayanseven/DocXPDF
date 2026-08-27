@@ -13,7 +13,6 @@ import SignatureModal from './components/SignatureModal.jsx';
 import WatermarkModal from './components/WatermarkModal.jsx';
 import PageNumbersModal from './components/PageNumbersModal.jsx';
 import MergeModal from './components/MergeModal.jsx';
-import SplitModal from './components/SplitModal.jsx';
 import CompressModal from './components/CompressModal.jsx';
 import ShortcutsHelpModal from './components/ShortcutsHelpModal.jsx';
 import RecoveryBanner from './components/RecoveryBanner.jsx';
@@ -89,7 +88,6 @@ export default function App() {
       {activeModal === 'watermark' && <WatermarkModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'pageNumbers' && <PageNumbersModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'merge' && <MergeModal onClose={() => setActiveModal(null)} />}
-      {activeModal === 'split' && <SplitModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'compress' && <CompressModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'shortcuts' && <ShortcutsHelpModal onClose={() => setActiveModal(null)} />}
       <Toast />

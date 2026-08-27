@@ -19,6 +19,7 @@
 
   --border: #e5e5e8;
   --border-strong: #d4d4d9;
+  --empty-dash-border: #d5d5d5;
 
   --text-primary: #18181b;
   --text-secondary: #52525b;
@@ -92,6 +93,9 @@
   /* Uniform inset for the floating rail + stage cards, so they sit flush
      with each other at the same top edge and share the same height. */
   --shell-margin: 20px;
+  /* Gap between the header and the rail/stage below it — 20% tighter
+     than the shell's other insets. */
+  --shell-margin-top: 16px;
 
   /* Floating shell — soft lavender-to-white diagonal wash behind the
      header/rail/stage cards (light theme only; dark theme keeps its own
@@ -118,6 +122,7 @@
 
   --border: #313136;
   --border-strong: #43434a;
+  --empty-dash-border: #43434a;
 
   --text-primary: #f4f4f5;
   --text-secondary: #a8a8b3;

@@ -64,7 +64,7 @@ select:focus-visible,
   position: relative;
   flex: 1 1 auto;
   overflow: auto;
-  margin: var(--shell-margin);
+  margin: var(--shell-margin-top) var(--shell-margin) var(--shell-margin) var(--shell-margin);
   border-radius: var(--radius-xl);
   transition: background var(--duration-base) var(--ease-standard);
 }

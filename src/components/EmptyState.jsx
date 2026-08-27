@@ -1,7 +1,15 @@
 import { useRef, useState } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud, FileSignature, PenTool, Pencil, Combine, Shrink, Sparkles } from 'lucide-react';
 import { loadPdfFile } from '../lib/loadFile.js';
 import emptyStateIllustration from '../assets/empty-state-illustration.png';
+
+const FEATURES = [
+  { Icon: FileSignature, label: 'Fill forms' },
+  { Icon: PenTool, label: 'Sign' },
+  { Icon: Pencil, label: 'Annotate' },
+  { Icon: Combine, label: 'Merge' },
+  { Icon: Shrink, label: 'Compress' },
+];
 
 export default function EmptyState() {
   const inputRef = useRef(null);
@@ -28,8 +36,20 @@ export default function EmptyState() {
       onDrop={onDrop}
     >
       <img className="empty-illustration" src={emptyStateIllustration} alt="" />
+      <span className="empty-free-badge">
+        <Sparkles size={13} strokeWidth={2} />
+        100% free, no sign-up
+      </span>
       <h1>Start editing a PDF</h1>
-      <p>Drop a file here, or choose one below. Everything happens in your browser — nothing is uploaded anywhere.</p>
+      <p>Fill forms, sign, annotate, merge, and compress PDFs, completely free and entirely in your browser. Nothing is ever uploaded anywhere.</p>
+      <ul className="empty-features">
+        {FEATURES.map(({ Icon, label }) => (
+          <li key={label} className="empty-feature">
+            <Icon size={14} strokeWidth={2} />
+            {label}
+          </li>
+        ))}
+      </ul>
       <button className="empty-cta" onClick={() => inputRef.current?.click()}>
         <UploadCloud size={20} strokeWidth={2} />
         Upload a document

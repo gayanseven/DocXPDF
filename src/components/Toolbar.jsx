@@ -43,7 +43,7 @@ export default function Toolbar() {
       URL.revokeObjectURL(url);
       addToast({ type: 'success', message: 'PDF exported successfully' });
     } catch {
-      addToast({ type: 'error', message: 'Export failed — please try again' });
+      addToast({ type: 'error', message: 'Export failed. Please try again' });
     } finally {
       setExporting(false);
     }

@@ -247,30 +247,6 @@
 .merge-queue-remove:active { transform: scale(0.85); }
 .merge-add-btn { display: inline-flex; align-items: center; gap: 7px; align-self: flex-start; }
 
-/* ── Split / extract page grid ──────────────────────────────────────────── */
-.split-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-3); }
-.split-thumb {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-  cursor: pointer;
-  position: relative;
-}
-.split-thumb input { position: absolute; top: 5px; left: 5px; z-index: 1; accent-color: var(--accent); cursor: pointer; }
-.split-thumb canvas {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: #fff;
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-fast) var(--ease-standard),
-              box-shadow var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-standard);
-}
-.split-thumb:hover canvas { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.split-thumb--selected canvas { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-subtle); }
-.split-thumb-num { font-size: var(--text-xs); color: var(--text-muted); }
-
 /* ── Compress modal ──────────────────────────────────────────────────────── */
 .compress-warning {
   display: flex;

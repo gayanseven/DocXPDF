@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { X, GripVertical, FilePlus2 } from 'lucide-react';
 import { useStore } from '../state/store.js';
-import { mergePdfs } from '../lib/mergeSplit.js';
+import { mergePdfs } from '../lib/merge.js';
 
 const MAX_TOTAL_BYTES = 150 * 1024 * 1024;
 
@@ -44,7 +44,7 @@ export default function MergeModal({ onClose }) {
     if (files.length < 2) return;
     const totalBytes = files.reduce((sum, f) => sum + f.arrayBuffer.byteLength, 0);
     if (totalBytes > MAX_TOTAL_BYTES) {
-      addToast({ type: 'info', message: 'That’s a lot of data — merging may be slow' });
+      addToast({ type: 'info', message: 'That’s a lot of data. Merging may be slow' });
     }
     setMerging(true);
     try {
@@ -59,7 +59,7 @@ export default function MergeModal({ onClose }) {
       addToast({ type: 'success', message: 'Merged PDF downloaded' });
       onClose();
     } catch {
-      addToast({ type: 'error', message: 'Merge failed — one of the files may be invalid' });
+      addToast({ type: 'error', message: 'Merge failed. One of the files may be invalid' });
     } finally {
       setMerging(false);
     }
@@ -75,7 +75,7 @@ export default function MergeModal({ onClose }) {
           </button>
         </div>
         <div className="modal-body">
-          <p className="sig-hint">Add PDFs and drag to reorder — they'll be combined in this order.</p>
+          <p className="sig-hint">Add PDFs and drag to reorder. They'll be combined in this order.</p>
           <div className="merge-queue">
             {files.length === 0 && <div className="sig-saved-empty">No files added yet</div>}
             {files.map((f, i) => (

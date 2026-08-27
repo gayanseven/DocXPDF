@@ -108,7 +108,7 @@ export default function WatermarkModal({ onClose }) {
               </div>
             </>
           )}
-          <p className="sig-hint">Applied when you export — this doesn't change the live preview.</p>
+          <p className="sig-hint">Applied when you export. This doesn't change the live preview.</p>
         </div>
 
         <div className="modal-actions">

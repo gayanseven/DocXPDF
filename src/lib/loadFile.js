@@ -17,7 +17,7 @@ export async function loadPdfFile(file) {
     return;
   }
   if (file.size > LARGE_FILE_BYTES) {
-    addToast({ type: 'info', message: 'Large file — this may take a moment' });
+    addToast({ type: 'info', message: 'Large file. This may take a moment' });
   }
 
   setLoading(true);

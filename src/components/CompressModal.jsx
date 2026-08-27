@@ -36,7 +36,7 @@ export default function CompressModal({ onClose }) {
       const compressedBytes = await compressPdf(editedBytes, quality);
       setResult({ bytes: compressedBytes, originalSize: editedBytes.byteLength });
     } catch {
-      addToast({ type: 'error', message: 'Compression failed — please try again' });
+      addToast({ type: 'error', message: 'Compression failed. Please try again' });
     } finally {
       setWorking(false);
     }
@@ -88,7 +88,7 @@ export default function CompressModal({ onClose }) {
           {result && (
             <div className="compress-result">
               {formatBytes(result.originalSize)} → {formatBytes(result.bytes.byteLength)}
-              {reduction > 0 ? ` (${reduction}% smaller)` : ' — no size reduction, try a smaller quality tier'}
+              {reduction > 0 ? ` (${reduction}% smaller)` : ' (no size reduction, try a smaller quality tier)'}
             </div>
           )}
         </div>
