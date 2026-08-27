@@ -75,7 +75,7 @@ export default function App() {
       <div className="body">
         <Sidebar />
         {doc && thumbnailPanelOpen && <PageManagerPanel />}
-        <main className="stage">
+        <main className={`stage${doc ? ' stage--doc' : ''}`}>
           {doc && activeTool === 'annotate' && <AnnotateToolbar />}
           {doc ? <PdfViewer /> : <EmptyState />}
         </main>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RotateCcw, RotateCw, Copy, Trash2, GripVertical } from 'lucide-react';
 import { useStore } from '../state/store.js';
 import { renderPage } from '../lib/pdfRender.js';
@@ -7,6 +7,7 @@ const THUMB_WIDTH = 168;
 
 export default function PageThumbnail({ item, index, displayNumber, dragging, onDragStart, onDragOver, onDrop }) {
   const canvasRef = useRef(null);
+  const [rendering, setRendering] = useState(!item.isBlank);
   const doc = useStore((s) => s.doc);
   const rotatePageItem = useStore((s) => s.rotatePageItem);
   const duplicatePageItem = useStore((s) => s.duplicatePageItem);
@@ -16,10 +17,15 @@ export default function PageThumbnail({ item, index, displayNumber, dragging, on
   useEffect(() => {
     let cancelled = false;
     if (!doc || item.isBlank || !canvasRef.current) return;
+    setRendering(true);
     const scale = THUMB_WIDTH / item.width;
-    renderPage(doc, item.sourcePage, canvasRef.current, scale, item.rotation).catch((err) => {
-      if (!cancelled) console.error('Thumbnail render failed', err);
-    });
+    renderPage(doc, item.sourcePage, canvasRef.current, scale, item.rotation)
+      .catch((err) => {
+        console.error('Thumbnail render failed', err);
+      })
+      .finally(() => {
+        if (!cancelled) setRendering(false);
+      });
     return () => { cancelled = true; };
   }, [doc, item.sourcePage, item.rotation, item.isBlank, item.width]);
 
@@ -40,7 +46,10 @@ export default function PageThumbnail({ item, index, displayNumber, dragging, on
             Blank
           </div>
         ) : (
-          <canvas ref={canvasRef} />
+          <>
+            {rendering && <div className="page-thumb-skeleton" />}
+            <canvas ref={canvasRef} className={rendering ? 'is-rendering' : ''} />
+          </>
         )}
         <div className="page-thumb-drag"><GripVertical size={14} /></div>
       </div>

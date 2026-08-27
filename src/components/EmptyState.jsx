@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { FileText, UploadCloud } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { loadPdfFile } from '../lib/loadFile.js';
+import emptyStateIllustration from '../assets/empty-state-illustration.png';
 
 export default function EmptyState() {
   const inputRef = useRef(null);
@@ -26,14 +27,12 @@ export default function EmptyState() {
       onDragLeave={() => setDragOver(false)}
       onDrop={onDrop}
     >
-      <div className="empty-icon">
-        <FileText size={53} strokeWidth={1.4} />
-      </div>
+      <img className="empty-illustration" src={emptyStateIllustration} alt="" />
       <h1>Start editing a PDF</h1>
       <p>Drop a file here, or choose one below. Everything happens in your browser — nothing is uploaded anywhere.</p>
       <button className="empty-cta" onClick={() => inputRef.current?.click()}>
         <UploadCloud size={20} strokeWidth={2} />
-        Choose a PDF
+        Upload a document
       </button>
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={onFile} />
     </div>

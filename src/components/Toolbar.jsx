@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FolderOpen, Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2, Eraser, HelpCircle } from 'lucide-react';
+import { Minus, Plus, Download, X, Loader2, Sun, Moon, Undo2, Redo2, Eraser, HelpCircle } from 'lucide-react';
 import { useStore } from '../state/store.js';
 import { exportPdf } from '../lib/exportPdf.js';
 import { loadPdfFile } from '../lib/loadFile.js';
@@ -60,8 +60,10 @@ export default function Toolbar() {
     <header className="header">
       {/* Brand / open */}
       <button className="header-brand" onClick={() => inputRef.current?.click()} title="Open PDF" disabled={loading}>
-        {loading ? <Loader2 size={22} className="spin" /> : <FolderOpen size={22} strokeWidth={1.75} />}
-        <span className="header-brand-text">Docx PDF</span>
+        {loading && <Loader2 size={18} className="spin" />}
+        <span className="header-brand-text">
+          Docx<span className="header-brand-text--accent"> PDF</span>
+        </span>
       </button>
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={onFile} />
 

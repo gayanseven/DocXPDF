@@ -25,12 +25,15 @@
   --text-muted: #9c9ca6;
   --text-on-accent: #ffffff;
 
-  /* Restrained single accent */
-  --accent: #3b6ef5;
-  --accent-hover: #2f5adf;
-  --accent-active: #2748b8;
+  /* Restrained single accent (indigo) */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-active: #3730a3;
   --accent-subtle: #eef2ff;
-  --accent-subtle-border: #dbe4ff;
+  --accent-subtle-border: #e0e7ff;
+  /* Saturated icon-hover fill — "filled color on hover" for icon buttons */
+  --accent-fill-hover: #bebaff;
+  --accent-fill-hover-text: #4338ca;
 
   --success: #16a34a;
   --success-subtle: #f0fdf4;
@@ -52,10 +55,10 @@
   --space-10: 48px;
   --space-12: 58px;
 
-  --radius-sm: 7px;
+  --radius-sm: 8px;
   --radius: 10px;
   --radius-lg: 14px;
-  --radius-xl: 19px;
+  --radius-xl: 20px;
   --radius-full: 999px;
 
   --shadow-xs: 0 1px 2px rgba(16, 24, 40, .05);
@@ -63,7 +66,7 @@
   --shadow-md: 0 4px 12px rgba(16, 24, 40, .08), 0 2px 4px rgba(16, 24, 40, .04);
   --shadow-lg: 0 12px 32px rgba(16, 24, 40, .14), 0 4px 8px rgba(16, 24, 40, .04);
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  --font-sans: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
   --text-xs: 13px;
   --text-sm: 14px;
   --text-base: 16px;
@@ -84,8 +87,16 @@
   --chrome-dark-text: #f4f4f5;
   --chrome-dark-text-muted: rgba(255, 255, 255, 0.65);
 
-  --header-h: 67px;
-  --rail-w: 67px;
+  --header-h: 74px;
+  --rail-w: 60px;
+  /* Uniform inset for the floating rail + stage cards, so they sit flush
+     with each other at the same top edge and share the same height. */
+  --shell-margin: 20px;
+
+  /* Floating shell — soft lavender-to-white diagonal wash behind the
+     header/rail/stage cards (light theme only; dark theme keeps its own
+     flat surface so the glow doesn't read as a mistake on dark chrome). */
+  --shell-bg: linear-gradient(138deg, #f0f0fe 0%, #ffffff 58%);
 
   --z-header: 100;
   --z-rail: 90;
@@ -113,11 +124,13 @@
   --text-muted: #6f6f78;
   --text-on-accent: #ffffff;
 
-  --accent: #5b82ff;
-  --accent-hover: #7196ff;
-  --accent-active: #4a6fe0;
-  --accent-subtle: #1c2540;
-  --accent-subtle-border: #2b3a6b;
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-active: #6366f1;
+  --accent-subtle: #1e1b4b;
+  --accent-subtle-border: #312e81;
+  --accent-fill-hover: rgba(129, 140, 248, 0.28);
+  --accent-fill-hover-text: #c7d2fe;
 
   --success: #22c55e;
   --success-subtle: #0f2417;

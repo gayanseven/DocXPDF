@@ -22,12 +22,37 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-subtle), 0 0 0 1px var(--accent);
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollable areas keep working, but never show scrollbar chrome —
+   the app relies on wheel/trackpad/drag, never a visible track+thumb. */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
 /* ── App shell ──────────────────────────────────────────────────────────── */
-.app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--surface-app);
+}
+:root:not([data-theme="dark"]) .app { background: var(--shell-bg); }
 
 .body {
   flex: 1 1 auto;
@@ -39,5 +64,8 @@ select:focus-visible,
   position: relative;
   flex: 1 1 auto;
   overflow: auto;
-  background: var(--surface-sunken);
+  margin: var(--shell-margin);
+  border-radius: var(--radius-xl);
+  transition: background var(--duration-base) var(--ease-standard);
 }
+.stage--doc { background: var(--surface-sunken); }
